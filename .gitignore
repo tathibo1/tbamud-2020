@@ -5,4 +5,5 @@ config.cache
 config.log
 config.status
 syslog
+syslog.*
 log/*
