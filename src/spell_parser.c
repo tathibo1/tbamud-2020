@@ -928,7 +928,7 @@ void mag_assign_spells(void)
 	TAR_CHAR_ROOM, FALSE, MAG_MANUAL,
 	NULL);
 
-  spello(SPELL_IDENTIFY, "identify", 50, 25, 5, POS_STANDING,
+  spello(SPELL_IDENTIFY, "identify", 14, 6, 2, POS_STANDING,
         TAR_CHAR_ROOM | TAR_OBJ_INV | TAR_OBJ_ROOM, FALSE, MAG_MANUAL,
         NULL);
 
