@@ -1,0 +1,6 @@
+bin/*
+src/*.o
+src/util/*.o
+config.cache
+config.log
+config.status
