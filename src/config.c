@@ -102,7 +102,7 @@ int no_mort_to_immort = YES;
 
 /* Are diagonal directions enabled?
 * If set to NO, then only the 6 directions n,e,s,w,u,d are allowed */
-int diagonal_dirs = NO;
+int diagonal_dirs = YES;
 
 /* RENT/CRASHSAVE OPTIONS */
 /* Should the MUD allow you to 'rent' for free?  (i.e. if you just quit, your
@@ -298,7 +298,7 @@ int display_closed_doors = YES;
 
 /* Automap and map options */
 /* Default is to have automap and map command only enabled for immortals */
-int map_option = MAP_IMM_ONLY;
+int map_option = MAP_ON;
 int default_map_size = 6;
 int default_minimap_size = 2;
 

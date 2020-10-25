@@ -422,6 +422,10 @@ ACMD(do_exits)
     send_to_char(ch, "You can't see a damned thing, you're blind!\r\n");
     return;
   }
+  else if (IS_DARK(IN_ROOM(ch)) && !CAN_SEE_IN_DARK(ch)) {
+    send_to_char(ch, "It is pitch black...\r\n");
+    return;
+  }
 
   send_to_char(ch, "Obvious Exits:\r\n");
 
