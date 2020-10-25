@@ -928,15 +928,17 @@ void mag_assign_spells(void)
 	TAR_CHAR_ROOM, FALSE, MAG_MANUAL,
 	NULL);
 
-  spello(SPELL_IDENTIFY, "identify", 14, 6, 2, POS_STANDING,
+  spello(SPELL_IDENTIFY, "identify", 10, 5, 1, POS_STANDING,
         TAR_CHAR_ROOM | TAR_OBJ_INV | TAR_OBJ_ROOM, FALSE, MAG_MANUAL,
         NULL);
 
 
   /* NON-castable spells should appear below here. */
+  /*
   spello(SPELL_IDENTIFY, "identify", 0, 0, 0, 0,
 	TAR_CHAR_ROOM | TAR_OBJ_INV | TAR_OBJ_ROOM, FALSE, MAG_MANUAL,
 	NULL);
+  */
 
   /* you might want to name this one something more fitting to your theme -Welcor*/
   spello(SPELL_DG_AFFECT, "Script-inflicted", 0, 0, 0, POS_SITTING,

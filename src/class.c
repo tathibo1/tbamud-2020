@@ -1560,6 +1560,7 @@ int invalid_class(struct char_data *ch, struct obj_data *obj)
 void init_spell_levels(void)
 {
   /* MAGES */
+  spell_level(SPELL_IDENTIFY, CLASS_MAGIC_USER, 1);
   spell_level(SPELL_MAGIC_MISSILE, CLASS_MAGIC_USER, 1);
   spell_level(SPELL_DETECT_INVIS, CLASS_MAGIC_USER, 2);
   spell_level(SPELL_DETECT_MAGIC, CLASS_MAGIC_USER, 2);
@@ -1581,12 +1582,12 @@ void init_spell_levels(void)
   spell_level(SPELL_POISON, CLASS_MAGIC_USER, 14);
   spell_level(SPELL_FIREBALL, CLASS_MAGIC_USER, 15);
   spell_level(SPELL_CHARM, CLASS_MAGIC_USER, 16);
-  spell_level(SPELL_IDENTIFY, CLASS_MAGIC_USER, 1);
   spell_level(SPELL_FLY, CLASS_MAGIC_USER, 22);
   spell_level(SPELL_ENCHANT_WEAPON, CLASS_MAGIC_USER, 26);
   spell_level(SPELL_CLONE, CLASS_MAGIC_USER, 30);
 
   /* CLERICS */
+  spell_level(SPELL_IDENTIFY, CLASS_CLERIC, 1);
   spell_level(SPELL_CURE_LIGHT, CLASS_CLERIC, 1);
   spell_level(SPELL_ARMOR, CLASS_CLERIC, 1);
   spell_level(SPELL_CREATE_FOOD, CLASS_CLERIC, 2);
@@ -1604,7 +1605,6 @@ void init_spell_levels(void)
   spell_level(SPELL_CURE_CRITIC, CLASS_CLERIC, 9);
   spell_level(SPELL_SUMMON, CLASS_CLERIC, 10);
   spell_level(SPELL_REMOVE_POISON, CLASS_CLERIC, 10);
-  spell_level(SPELL_IDENTIFY, CLASS_CLERIC, 1);
   spell_level(SPELL_WORD_OF_RECALL, CLASS_CLERIC, 12);
   spell_level(SPELL_DARKNESS, CLASS_CLERIC, 12);
   spell_level(SPELL_EARTHQUAKE, CLASS_CLERIC, 12);
