@@ -47,6 +47,24 @@ const char *dirs[] =
   "\n"
 };
 
+/** Description of cardinal directions.
+ * @pre Must be in the same order as the defines.
+ * Must end array with a single newline. */
+const char *dirs_capitalized[] =
+{
+  "North",
+  "East",
+  "South",
+  "West",
+  "Up",
+  "Down",
+  "Northwest", /* Diagonals only used if CONFIG_DIAGONAL_DIRS is set */
+  "Northeast",
+  "Southeast",
+  "Southwest",
+  "\n"
+};
+
 const char *autoexits[] =
 {
   "n",

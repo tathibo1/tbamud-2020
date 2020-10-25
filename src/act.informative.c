@@ -414,31 +414,6 @@ static void list_char_to_char(struct char_data *list, struct char_data *ch)
     }
 }
 
-static void do_auto_exits(struct char_data *ch)
-{
-  int door, slen = 0;
-
-  send_to_char(ch, "%s[ Exits: ", CCCYN(ch, C_NRM));
-
-  for (door = 0; door < DIR_COUNT; door++) {
-    if (!EXIT(ch, door) || EXIT(ch, door)->to_room == NOWHERE)
-      continue;
-    if (EXIT_FLAGGED(EXIT(ch, door), EX_CLOSED) && !CONFIG_DISP_CLOSED_DOORS)
-      continue;
-	if (EXIT_FLAGGED(EXIT(ch, door), EX_HIDDEN) && !PRF_FLAGGED(ch, PRF_HOLYLIGHT))
-	  continue;
-    if (EXIT_FLAGGED(EXIT(ch, door), EX_CLOSED))
-	  send_to_char(ch, "%s(%s)%s ", EXIT_FLAGGED(EXIT(ch, door), EX_HIDDEN) ? CCWHT(ch, C_NRM) : CCRED(ch, C_NRM), autoexits[door], CCCYN(ch, C_NRM));
-	else if (EXIT_FLAGGED(EXIT(ch, door), EX_HIDDEN))
-	  send_to_char(ch, "%s%s%s ", CCWHT(ch, C_NRM), autoexits[door], CCCYN(ch, C_NRM));
-    else
-      send_to_char(ch, "\t(%s\t) ", autoexits[door]);
-    slen++;
-  }
-
-  send_to_char(ch, "%s]%s\r\n", slen ? "" : "None!", CCNRM(ch, C_NRM));
-}
-
 ACMD(do_exits)
 {
   int door, len = 0;
@@ -448,7 +423,7 @@ ACMD(do_exits)
     return;
   }
 
-  send_to_char(ch, "Obvious exits:\r\n");
+  send_to_char(ch, "Obvious Exits:\r\n");
 
   for (door = 0; door < DIR_COUNT; door++) {
     if (!EXIT(ch, door) || EXIT(ch, door)->to_room == NOWHERE)
@@ -461,21 +436,37 @@ ACMD(do_exits)
     len++;
 
     if (!IS_NPC(ch) && PRF_FLAGGED(ch, PRF_SHOWVNUMS) && !EXIT_FLAGGED(EXIT(ch, door), EX_CLOSED))
-      send_to_char(ch, "%-5s - [%5d]%s %s\r\n", dirs[door], GET_ROOM_VNUM(EXIT(ch, door)->to_room),
-      EXIT_FLAGGED(EXIT(ch, door), EX_HIDDEN) ? " [HIDDEN]" : "", world[EXIT(ch, door)->to_room].name);
+      send_to_char(
+        ch, "%-5s - [%5d]%s %s\r\n",
+        dirs_capitalized[door],
+        GET_ROOM_VNUM(EXIT(ch, door)->to_room),
+        EXIT_FLAGGED(EXIT(ch, door), EX_HIDDEN) ? " [HIDDEN]" : "",
+        world[EXIT(ch, door)->to_room].name
+      );
     else if (CONFIG_DISP_CLOSED_DOORS && EXIT_FLAGGED(EXIT(ch, door), EX_CLOSED)) {
       /* But we tell them the door is closed */
-      send_to_char(ch, "%-5s - The %s is closed%s\r\n", dirs[door],
-		(EXIT(ch, door)->keyword)? fname(EXIT(ch, door)->keyword) : "opening",
-		EXIT_FLAGGED(EXIT(ch, door), EX_HIDDEN) ? " and hidden." : ".");
-      }
+      send_to_char(
+        ch, "%-5s - The %s is closed%s\r\n",
+        dirs_capitalized[door],
+		    (EXIT(ch, door)->keyword)? fname(EXIT(ch, door)->keyword) : "opening",
+		    EXIT_FLAGGED(EXIT(ch, door), EX_HIDDEN) ? " and hidden." : "."
+      );
+    }
     else
-      send_to_char(ch, "%-5s - %s\r\n", dirs[door], IS_DARK(EXIT(ch, door)->to_room) &&
-		!CAN_SEE_IN_DARK(ch) ? "Too dark to tell." : world[EXIT(ch, door)->to_room].name);
+      send_to_char(
+        ch, "%-5s - %s\r\n",
+        dirs_capitalized[door],
+        IS_DARK(EXIT(ch, door)->to_room) && !CAN_SEE_IN_DARK(ch) ? "Too dark to tell." : world[EXIT(ch, door)->to_room].name
+      );
   }
 
   if (!len)
     send_to_char(ch, " None.\r\n");
+}
+
+static void do_auto_exits(struct char_data *ch)
+{
+  return do_exits(ch, NULL, 0, 0);
 }
 
 void look_at_room(struct char_data *ch, int ignore_brief)
@@ -644,7 +635,7 @@ static void look_at_target(struct char_data *ch, char *arg)
     look_at_char(found_char, ch);
     if (ch != found_char) {
       if (CAN_SEE(found_char, ch))
-	act("$n looks at you.", TRUE, ch, 0, found_char, TO_VICT);
+	      act("$n looks at you.", TRUE, ch, 0, found_char, TO_VICT);
       act("$n looks at $N.", TRUE, ch, 0, found_char, TO_NOTVICT);
     }
     return;
@@ -666,16 +657,16 @@ static void look_at_target(struct char_data *ch, char *arg)
   for (j = 0; j < NUM_WEARS && !found; j++)
     if (GET_EQ(ch, j) && CAN_SEE_OBJ(ch, GET_EQ(ch, j)))
       if ((desc = find_exdesc(arg, GET_EQ(ch, j)->ex_description)) != NULL && ++i == fnum) {
-	send_to_char(ch, "%s", desc);
-	found = TRUE;
+	      send_to_char(ch, "%s", desc);
+	      found = TRUE;
       }
 
   /* Does the argument match an extra desc in the char's inventory? */
   for (obj = ch->carrying; obj && !found; obj = obj->next_content) {
     if (CAN_SEE_OBJ(ch, obj))
       if ((desc = find_exdesc(arg, obj->ex_description)) != NULL && ++i == fnum) {
-	send_to_char(ch, "%s", desc);
-	found = TRUE;
+	      send_to_char(ch, "%s", desc);
+	      found = TRUE;
       }
   }
 
@@ -683,8 +674,8 @@ static void look_at_target(struct char_data *ch, char *arg)
   for (obj = world[IN_ROOM(ch)].contents; obj && !found; obj = obj->next_content)
     if (CAN_SEE_OBJ(ch, obj))
       if ((desc = find_exdesc(arg, obj->ex_description)) != NULL && ++i == fnum) {
-	send_to_char(ch, "%s", desc);
-	found = TRUE;
+	      send_to_char(ch, "%s", desc);
+	      found = TRUE;
       }
 
   /* If an object was found back in generic_find */
@@ -722,9 +713,9 @@ ACMD(do_look)
 
     if (subcmd == SCMD_READ) {
       if (!*arg)
-	send_to_char(ch, "Read what?\r\n");
+	      send_to_char(ch, "Read what?\r\n");
       else
-	look_at_target(ch, strcpy(tempsave, arg));
+	      look_at_target(ch, strcpy(tempsave, arg));
       return;
     }
     if (!*arg)			/* "look" alone, without an argument at all */
