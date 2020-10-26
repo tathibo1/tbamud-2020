@@ -789,8 +789,155 @@ ACMD(do_gold)
 
 ACMD(do_score)
 {
-  struct time_info_data playing_time;
+  char hits[MAX_STRING_LENGTH];
+  char mana[MAX_STRING_LENGTH];
+  char move[MAX_STRING_LENGTH];
 
+  snprintf(hits, sizeof(hits), "%d/%d+%d", GET_HIT(ch), GET_MAX_HIT(ch), hit_gain(ch));
+  snprintf(mana, sizeof(mana), "%d/%d+%d", GET_MANA(ch), GET_MAX_MANA(ch), mana_gain(ch));
+  snprintf(move, sizeof(move), "%d/%d+%d", GET_MOVE(ch), GET_MAX_MOVE(ch), move_gain(ch));
+
+  send_to_char(ch, "+==============================================================================+\r\n");
+  send_to_char(ch, "| Name: %16s | Class: %18s | Level: %16d |\r\n", ch->player.name, pc_class_types[(int) GET_CLASS(ch)], GET_LEVEL(ch));
+  send_to_char(ch, "+------------------------+---------------------------+-------------------------+\r\n");
+  send_to_char(ch, "| Str: %13d/%3d | AC: %21d | Hits: %17s |\r\n", GET_STR(ch), GET_ADD(ch), GET_AC(ch), hits);
+  send_to_char(ch, "| Int: %17d | HitRoll: %16d | Mana: %17s |\r\n", GET_INT(ch), GET_HITROLL(ch), mana);
+  send_to_char(ch, "| Wis: %17d | DamRoll: %16d | Move: %17s |\r\n", GET_WIS(ch), GET_DAMROLL(ch), move);
+  send_to_char(ch, "| Dex: %17d | Gold: %19d | Hunger: %15d |\r\n", GET_DEX(ch), GET_GOLD(ch), GET_COND(ch, HUNGER));
+  send_to_char(ch, "| Con: %17d | Bank: %19d | Thirst: %15d |\r\n", GET_CON(ch), GET_BANK_GOLD(ch), GET_COND(ch, THIRST));
+  send_to_char(ch, "| Cha: %17d | QP: %21d | Drunk: %16d |\r\n", GET_CHA(ch), GET_QUESTPOINTS(ch), GET_COND(ch, DRUNK));
+  send_to_char(ch, "+------------------------------------------------------------------------------+\r\n");
+  send_to_char(ch, "| Age:%-4d SAV_PARA:%-3d SAV_ROD:%-3d SAV_PETRI:%-3d SAV_BREATH:%-3d SAV_SPELL:%-3d |\r\n", GET_AGE(ch), GET_SAVE(ch, 0), GET_SAVE(ch, 1), GET_SAVE(ch, 2), GET_SAVE(ch, 3), GET_SAVE(ch, 4));
+  send_to_char(ch, "+==============================================================================+\r\n");
+
+  if (GET_LEVEL(ch) < LVL_IMMORT)
+    send_to_char(ch, "You need %d exp to reach your next level.\r\n", level_exp(GET_CLASS(ch), GET_LEVEL(ch) + 1) - GET_EXP(ch));
+
+  send_to_char(
+    ch, "You have completed %d quest%s, ",
+    GET_NUM_QUESTS(ch),
+    GET_NUM_QUESTS(ch) == 1 ? "" : "s"
+  );
+
+  if (GET_QUEST(ch) == NOTHING)
+    send_to_char(ch, "and you are not on a quest at the moment.\r\n");
+  else
+  {
+    send_to_char(ch, "and your current quest is: %s", QST_NAME(real_quest(GET_QUEST(ch))));
+
+    if (!IS_NPC(ch) && PRF_FLAGGED(ch, PRF_SHOWVNUMS))
+        send_to_char(ch, " [%d]\r\n", GET_QUEST(ch));
+    else
+        send_to_char(ch, "\r\n");
+  }
+
+  struct time_info_data playing_time = *real_time_passed((time(0) - ch->player.time.logon) + ch->player.time.played, 0);
+  send_to_char(
+    ch, "You have been playing for %d day%s and %d hour%s.\r\n",
+    playing_time.day, playing_time.day == 1 ? "" : "s",
+    playing_time.hours, playing_time.hours == 1 ? "" : "s"
+  );
+
+  send_to_char(
+    ch, "This ranks you as %s %s.\r\n",
+	  GET_NAME(ch),
+    GET_TITLE(ch)
+  );
+
+  switch (GET_POS(ch)) {
+    case POS_DEAD:
+      send_to_char(ch, "You are DEAD!\r\n");
+      break;
+    case POS_MORTALLYW:
+      send_to_char(ch, "You are mortally wounded!  You should seek help!\r\n");
+      break;
+    case POS_INCAP:
+      send_to_char(ch, "You are incapacitated, slowly fading away...\r\n");
+      break;
+    case POS_STUNNED:
+      send_to_char(ch, "You are stunned!  You can't move!\r\n");
+      break;
+    case POS_SLEEPING:
+      send_to_char(ch, "You are sleeping.\r\n");
+      break;
+    case POS_RESTING:
+      send_to_char(ch, "You are resting.\r\n");
+      break;
+    case POS_SITTING:
+      if (!SITTING(ch))
+        send_to_char(ch, "You are sitting.\r\n");
+      else {
+        struct obj_data *furniture = SITTING(ch);
+        send_to_char(ch, "You are sitting upon %s.\r\n", furniture->short_description);
+      }
+      break;
+    case POS_FIGHTING:
+      send_to_char(ch, "You are fighting %s.\r\n", FIGHTING(ch) ? PERS(FIGHTING(ch), ch) : "thin air");
+      break;
+    case POS_STANDING:
+      send_to_char(ch, "You are standing.\r\n");
+      break;
+    default:
+      send_to_char(ch, "You are floating.\r\n");
+      break;
+  }
+
+  if (GET_COND(ch, DRUNK) > 10)
+    send_to_char(ch, "You are intoxicated.\r\n");
+
+  if (GET_COND(ch, HUNGER) == 0)
+    send_to_char(ch, "You are hungry.\r\n");
+
+  if (GET_COND(ch, THIRST) == 0)
+    send_to_char(ch, "You are thirsty.\r\n");
+
+  if (AFF_FLAGGED(ch, AFF_BLIND) && GET_LEVEL(ch) < LVL_IMMORT)
+    send_to_char(ch, "You have been blinded!\r\n");
+
+  if (AFF_FLAGGED(ch, AFF_INVISIBLE))
+    send_to_char(ch, "You are invisible.\r\n");
+
+  if (AFF_FLAGGED(ch, AFF_DETECT_INVIS))
+    send_to_char(ch, "You are sensitive to the presence of invisible things.\r\n");
+
+  if (AFF_FLAGGED(ch, AFF_SANCTUARY))
+    send_to_char(ch, "You are protected by Sanctuary.\r\n");
+
+  if (AFF_FLAGGED(ch, AFF_POISON))
+    send_to_char(ch, "You are poisoned!\r\n");
+
+  if (AFF_FLAGGED(ch, AFF_CHARM))
+    send_to_char(ch, "You have been charmed!\r\n");
+
+  if (affected_by_spell(ch, SPELL_ARMOR))
+    send_to_char(ch, "You feel protected.\r\n");
+
+  if (AFF_FLAGGED(ch, AFF_INFRAVISION))
+    send_to_char(ch, "Your eyes are glowing red.\r\n");
+
+  if (PRF_FLAGGED(ch, PRF_SUMMONABLE))
+    send_to_char(ch, "You are summonable by other players.\r\n");
+
+  if (GET_LEVEL(ch) >= LVL_IMMORT) {
+    if (POOFIN(ch))
+      send_to_char(ch, "%sPOOFIN:  %s%s %s%s\r\n", QYEL, QCYN, GET_NAME(ch), POOFIN(ch), QNRM);
+    else
+      send_to_char(ch, "%sPOOFIN:  %s%s appears with an ear-splitting bang.%s\r\n", QYEL, QCYN, GET_NAME(ch), QNRM);
+
+    if (POOFOUT(ch))
+      send_to_char(ch, "%sPOOFOUT: %s%s %s%s\r\n", QYEL, QCYN, GET_NAME(ch), POOFOUT(ch), QNRM);
+    else
+      send_to_char(ch, "%sPOOFOUT: %s%s disappears in a puff of smoke.%s\r\n", QYEL, QCYN, GET_NAME(ch), QNRM);
+
+    send_to_char(ch, "Your current zone: %s%d%s\r\n", CCCYN(ch, C_NRM), GET_OLC_ZONE(ch), CCNRM(ch, C_NRM));
+  }
+}
+
+/*
+ACMD(do_score)
+{
+  struct time_info_data playing_time;
+  struct char_data *tmp = ch;
   if (IS_NPC(ch))
     return;
 
@@ -813,7 +960,7 @@ ACMD(do_score)
 
   if (GET_LEVEL(ch) < LVL_IMMORT)
     send_to_char(ch, "You need %d exp to reach your next level.\r\n",
-	level_exp(GET_CLASS(ch), GET_LEVEL(ch) + 1) - GET_EXP(ch));
+	    evel_exp(GET_CLASS(ch), GET_LEVEL(ch) + 1) - GET_EXP(ch));
 
   send_to_char(ch, "You have earned %d quest points.\r\n", GET_QUESTPOINTS(ch));
   send_to_char(ch, "You have completed %d quest%s, ",
@@ -929,6 +1076,7 @@ ACMD(do_score)
  CCNRM(ch, C_NRM));
   }
 }
+*/
 
 ACMD(do_inventory)
 {
