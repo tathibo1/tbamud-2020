@@ -1416,7 +1416,6 @@ void do_start(struct char_data *ch)
   GET_EXP(ch) = 1;
 
   set_title(ch, NULL);
-  roll_real_abils(ch);
 
   GET_MAX_HIT(ch)  = 10;
   GET_MAX_MANA(ch) = 100;

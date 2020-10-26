@@ -38,6 +38,9 @@
 #include "ibt.h"
 #include "mud_event.h"
 
+/* external functions */
+void roll_real_abils(struct char_data *ch);
+
 /* local (file scope) functions */
 static int perform_dupe_check(struct descriptor_data *d);
 static struct alias_data *find_alias(struct alias_data *alias_list, char *str);
@@ -1442,16 +1445,16 @@ void nanny(struct descriptor_data *d, char *arg)
   case CON_NAME_CNFRM:		/* wait for conf. of new name    */
     if (UPPER(*arg) == 'Y') {
       if (isbanned(d->host) >= BAN_NEW) {
-	mudlog(NRM, LVL_GOD, TRUE, "Request for new char %s denied from [%s] (siteban)", GET_PC_NAME(d->character), d->host);
-	write_to_output(d, "Sorry, new characters are not allowed from your site!\r\n");
-	STATE(d) = CON_CLOSE;
-	return;
+	      mudlog(NRM, LVL_GOD, TRUE, "Request for new char %s denied from [%s] (siteban)", GET_PC_NAME(d->character), d->host);
+	      write_to_output(d, "Sorry, new characters are not allowed from your site!\r\n");
+	      STATE(d) = CON_CLOSE;
+	      return;
       }
       if (circle_restrict) {
-	write_to_output(d, "Sorry, new players can't be created at the moment.\r\n");
-	mudlog(NRM, LVL_GOD, TRUE, "Request for new char %s denied from [%s] (wizlock)", GET_PC_NAME(d->character), d->host);
-	STATE(d) = CON_CLOSE;
-	return;
+	      write_to_output(d, "Sorry, new players can't be created at the moment.\r\n");
+	      mudlog(NRM, LVL_GOD, TRUE, "Request for new char %s denied from [%s] (wizlock)", GET_PC_NAME(d->character), d->host);
+	      STATE(d) = CON_CLOSE;
+	      return;
       }
       perform_new_char_dupe_check(d);
       write_to_output(d, "New character.\r\nGive me a password for %s: ", GET_PC_NAME(d->character));
@@ -1570,9 +1573,9 @@ void nanny(struct descriptor_data *d, char *arg)
 		MAX_PWD_LENGTH)) {
       write_to_output(d, "\r\nPasswords don't match... start over.\r\nPassword: ");
       if (STATE(d) == CON_CNFPASSWD)
-	STATE(d) = CON_NEWPASSWD;
+	      STATE(d) = CON_NEWPASSWD;
       else
-	STATE(d) = CON_CHPWD_GETNEW;
+	      STATE(d) = CON_CHPWD_GETNEW;
       return;
     }
     echo_on(d);
@@ -1615,30 +1618,51 @@ void nanny(struct descriptor_data *d, char *arg)
     } else
       GET_CLASS(d->character) = load_result;
 
-      if (d->olc) {
-        free(d->olc);
-        d->olc = NULL;
-      }
-      if (GET_PFILEPOS(d->character) < 0)
-      GET_PFILEPOS(d->character) = create_entry(GET_PC_NAME(d->character));
-    /* Now GET_NAME() will work properly. */
-    init_char(d->character);
-    save_char(d->character);
-    save_player_index();
-    write_to_output(d, "%s\r\n*** PRESS RETURN: ", motd);
-    STATE(d) = CON_RMOTD;
-    /* make sure the last log is updated correctly. */
-    GET_PREF(d->character)= rand_number(1, 128000);
-    GET_HOST(d->character)= strdup(d->host);
-
-    mudlog(NRM, LVL_GOD, TRUE, "%s [%s] new player.", GET_NAME(d->character), d->host);
-
-    /* Add to the list of 'recent' players (since last reboot) */
-    if (AddRecentPlayer(GET_NAME(d->character), d->host, TRUE, FALSE) == FALSE)
-    {
-      mudlog(BRF, MAX(LVL_IMMORT, GET_INVIS_LEV(d->character)), TRUE, "Failure to AddRecentPlayer (returned FALSE).");
-    }
+    write_to_output(d, "\r\nPress enter to roll your stats.");
+    STATE(d) = CON_QROLLSTATS;
     break;
+
+  case CON_QROLLSTATS:
+    switch (*arg) {
+      case 'y':
+      case 'Y':
+        if (d->olc) {
+          free(d->olc);
+          d->olc = NULL;
+        }
+        if (GET_PFILEPOS(d->character) < 0)
+          GET_PFILEPOS(d->character) = create_entry(GET_PC_NAME(d->character));
+
+        /* Now GET_NAME() will work properly. */
+        init_char(d->character);
+        save_char(d->character);
+        save_player_index();
+        write_to_output(d, "%s\r\n*** PRESS RETURN: ", motd);
+        STATE(d) = CON_RMOTD;
+        /* make sure the last log is updated correctly. */
+        GET_PREF(d->character)= rand_number(1, 128000);
+        GET_HOST(d->character)= strdup(d->host);
+
+        mudlog(NRM, LVL_GOD, TRUE, "%s [%s] new player.", GET_NAME(d->character), d->host);
+
+        /* Add to the list of 'recent' players (since last reboot) */
+        if (AddRecentPlayer(GET_NAME(d->character), d->host, TRUE, FALSE) == FALSE)
+        {
+          mudlog(BRF, MAX(LVL_IMMORT, GET_INVIS_LEV(d->character)), TRUE, "Failure to AddRecentPlayer (returned FALSE).");
+        }
+        break;
+      case 'n':
+      case 'N':
+      default:
+        roll_real_abils(d->character);
+        write_to_output(d, "\r\nStr: [%d/%d] Int: [%d] Wis: [%d] Dex: [%d] Con: [%d] Cha: [%d]",
+           GET_STR(d->character), GET_ADD(d->character),
+           GET_INT(d->character), GET_WIS(d->character),
+           GET_DEX(d->character), GET_CON(d->character),
+           GET_CHA(d->character));
+        write_to_output(d, "\r\n\r\nKeep these stats? (y/N)");
+        return;
+    }
 
   case CON_RMOTD:		/* read CR after printing motd   */
     write_to_output(d, "%s", CONFIG_MENU);

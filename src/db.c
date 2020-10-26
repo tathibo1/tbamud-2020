@@ -3542,14 +3542,6 @@ void init_char(struct char_data *ch)
   for (i = 0; i < 5; i++)
     GET_SAVE(ch, i) = 0;
 
-  ch->real_abils.intel = 25;
-  ch->real_abils.wis = 25;
-  ch->real_abils.dex = 25;
-  ch->real_abils.str = 25;
-  ch->real_abils.str_add = 100;
-  ch->real_abils.con = 25;
-  ch->real_abils.cha = 25;
-
   for (i = 0; i < 3; i++)
     GET_COND(ch, i) = (GET_LEVEL(ch) == LVL_IMPL ? -1 : 24);
 
