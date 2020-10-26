@@ -789,36 +789,36 @@ ACMD(do_gold)
 
 ACMD(do_score)
 {
-  struct time_info_data playing_time;
+  char hits[MAX_STRING_LENGTH];
+  char mana[MAX_STRING_LENGTH];
+  char move[MAX_STRING_LENGTH];
 
-  if (IS_NPC(ch))
-    return;
+  snprintf(hits, sizeof(hits), "%d/%d+%d", GET_HIT(ch), GET_MAX_HIT(ch), hit_gain(ch));
+  snprintf(mana, sizeof(mana), "%d/%d+%d", GET_MANA(ch), GET_MAX_MANA(ch), mana_gain(ch));
+  snprintf(move, sizeof(move), "%d/%d+%d", GET_MOVE(ch), GET_MAX_MOVE(ch), move_gain(ch));
 
-  send_to_char(ch, "You are %d years old.", GET_AGE(ch));
-
-  if (age(ch)->month == 0 && age(ch)->day == 0)
-    send_to_char(ch, "  It's your birthday today.\r\n");
-  else
-    send_to_char(ch, "\r\n");
-
-  send_to_char(ch, "You have %d(%d) hit, %d(%d) mana and %d(%d) movement points.\r\n",
-	  GET_HIT(ch), GET_MAX_HIT(ch), GET_MANA(ch), GET_MAX_MANA(ch),
-	  GET_MOVE(ch), GET_MAX_MOVE(ch));
-
-  send_to_char(ch, "Your armor class is %d/10, and your alignment is %d.\r\n",
-	  compute_armor_class(ch), GET_ALIGNMENT(ch));
-
-  send_to_char(ch, "You have %d exp, %d gold coins, and %d questpoints.\r\n",
-	  GET_EXP(ch), GET_GOLD(ch), GET_QUESTPOINTS(ch));
+  send_to_char(ch, "+==============================================================================+\r\n");
+  send_to_char(ch, "| Name: %16s | Class: %18s | Level: %16d |\r\n", ch->player.name, pc_class_types[(int) GET_CLASS(ch)], GET_LEVEL(ch));
+  send_to_char(ch, "+------------------------+---------------------------+-------------------------+\r\n");
+  send_to_char(ch, "| Str: %13d/%3d | AC: %21d | Hits: %17s |\r\n", GET_STR(ch), GET_ADD(ch), GET_AC(ch), hits);
+  send_to_char(ch, "| Int: %17d | HitRoll: %16d | Mana: %17s |\r\n", GET_INT(ch), GET_HITROLL(ch), mana);
+  send_to_char(ch, "| Wis: %17d | DamRoll: %16d | Move: %17s |\r\n", GET_WIS(ch), GET_DAMROLL(ch), move);
+  send_to_char(ch, "| Dex: %17d | Gold: %19d | Hunger: %15d |\r\n", GET_DEX(ch), GET_GOLD(ch), GET_COND(ch, HUNGER));
+  send_to_char(ch, "| Con: %17d | Bank: %19d | Thirst: %15d |\r\n", GET_CON(ch), GET_BANK_GOLD(ch), GET_COND(ch, THIRST));
+  send_to_char(ch, "| Cha: %17d | QP: %21d | Drunk: %16d |\r\n", GET_CHA(ch), GET_QUESTPOINTS(ch), GET_COND(ch, DRUNK));
+  send_to_char(ch, "+------------------------------------------------------------------------------+\r\n");
+  send_to_char(ch, "| Age:%-4d SAV_PARA:%-3d SAV_ROD:%-3d SAV_PETRI:%-3d SAV_BREATH:%-3d SAV_SPELL:%-3d |\r\n", GET_AGE(ch), GET_SAVE(ch, 0), GET_SAVE(ch, 1), GET_SAVE(ch, 2), GET_SAVE(ch, 3), GET_SAVE(ch, 4));
+  send_to_char(ch, "+==============================================================================+\r\n");
 
   if (GET_LEVEL(ch) < LVL_IMMORT)
-    send_to_char(ch, "You need %d exp to reach your next level.\r\n",
-	level_exp(GET_CLASS(ch), GET_LEVEL(ch) + 1) - GET_EXP(ch));
+    send_to_char(ch, "You need %d exp to reach your next level.\r\n", level_exp(GET_CLASS(ch), GET_LEVEL(ch) + 1) - GET_EXP(ch));
 
-  send_to_char(ch, "You have earned %d quest points.\r\n", GET_QUESTPOINTS(ch));
-  send_to_char(ch, "You have completed %d quest%s, ",
-       GET_NUM_QUESTS(ch),
-       GET_NUM_QUESTS(ch) == 1 ? "" : "s");
+  send_to_char(
+    ch, "You have completed %d quest%s, ",
+    GET_NUM_QUESTS(ch),
+    GET_NUM_QUESTS(ch) == 1 ? "" : "s"
+  );
+
   if (GET_QUEST(ch) == NOTHING)
     send_to_char(ch, "and you are not on a quest at the moment.\r\n");
   else
@@ -831,51 +831,55 @@ ACMD(do_score)
         send_to_char(ch, "\r\n");
   }
 
-  playing_time = *real_time_passed((time(0) - ch->player.time.logon) +
-				  ch->player.time.played, 0);
-  send_to_char(ch, "You have been playing for %d day%s and %d hour%s.\r\n",
-     playing_time.day, playing_time.day == 1 ? "" : "s",
-     playing_time.hours, playing_time.hours == 1 ? "" : "s");
+  struct time_info_data playing_time = *real_time_passed((time(0) - ch->player.time.logon) + ch->player.time.played, 0);
+  send_to_char(
+    ch, "You have been playing for %d day%s and %d hour%s.\r\n",
+    playing_time.day, playing_time.day == 1 ? "" : "s",
+    playing_time.hours, playing_time.hours == 1 ? "" : "s"
+  );
 
-  send_to_char(ch, "This ranks you as %s %s (level %d).\r\n",
-	  GET_NAME(ch), GET_TITLE(ch), GET_LEVEL(ch));
+  send_to_char(
+    ch, "This ranks you as %s %s.\r\n",
+	  GET_NAME(ch),
+    GET_TITLE(ch)
+  );
 
   switch (GET_POS(ch)) {
-  case POS_DEAD:
-    send_to_char(ch, "You are DEAD!\r\n");
-    break;
-  case POS_MORTALLYW:
-    send_to_char(ch, "You are mortally wounded!  You should seek help!\r\n");
-    break;
-  case POS_INCAP:
-    send_to_char(ch, "You are incapacitated, slowly fading away...\r\n");
-    break;
-  case POS_STUNNED:
-    send_to_char(ch, "You are stunned!  You can't move!\r\n");
-    break;
-  case POS_SLEEPING:
-    send_to_char(ch, "You are sleeping.\r\n");
-    break;
-  case POS_RESTING:
-    send_to_char(ch, "You are resting.\r\n");
-    break;
-  case POS_SITTING:
-    if (!SITTING(ch))
-      send_to_char(ch, "You are sitting.\r\n");
-    else {
-      struct obj_data *furniture = SITTING(ch);
-      send_to_char(ch, "You are sitting upon %s.\r\n", furniture->short_description);
-    }
-    break;
-  case POS_FIGHTING:
-    send_to_char(ch, "You are fighting %s.\r\n", FIGHTING(ch) ? PERS(FIGHTING(ch), ch) : "thin air");
-    break;
-  case POS_STANDING:
-    send_to_char(ch, "You are standing.\r\n");
-    break;
-  default:
-    send_to_char(ch, "You are floating.\r\n");
-    break;
+    case POS_DEAD:
+      send_to_char(ch, "You are DEAD!\r\n");
+      break;
+    case POS_MORTALLYW:
+      send_to_char(ch, "You are mortally wounded!  You should seek help!\r\n");
+      break;
+    case POS_INCAP:
+      send_to_char(ch, "You are incapacitated, slowly fading away...\r\n");
+      break;
+    case POS_STUNNED:
+      send_to_char(ch, "You are stunned!  You can't move!\r\n");
+      break;
+    case POS_SLEEPING:
+      send_to_char(ch, "You are sleeping.\r\n");
+      break;
+    case POS_RESTING:
+      send_to_char(ch, "You are resting.\r\n");
+      break;
+    case POS_SITTING:
+      if (!SITTING(ch))
+        send_to_char(ch, "You are sitting.\r\n");
+      else {
+        struct obj_data *furniture = SITTING(ch);
+        send_to_char(ch, "You are sitting upon %s.\r\n", furniture->short_description);
+      }
+      break;
+    case POS_FIGHTING:
+      send_to_char(ch, "You are fighting %s.\r\n", FIGHTING(ch) ? PERS(FIGHTING(ch), ch) : "thin air");
+      break;
+    case POS_STANDING:
+      send_to_char(ch, "You are standing.\r\n");
+      break;
+    default:
+      send_to_char(ch, "You are floating.\r\n");
+      break;
   }
 
   if (GET_COND(ch, DRUNK) > 10)
@@ -925,8 +929,7 @@ ACMD(do_score)
     else
       send_to_char(ch, "%sPOOFOUT: %s%s disappears in a puff of smoke.%s\r\n", QYEL, QCYN, GET_NAME(ch), QNRM);
 
-    send_to_char(ch, "Your current zone: %s%d%s\r\n", CCCYN(ch, C_NRM), GET_OLC_ZONE(ch),
- CCNRM(ch, C_NRM));
+    send_to_char(ch, "Your current zone: %s%d%s\r\n", CCCYN(ch, C_NRM), GET_OLC_ZONE(ch), CCNRM(ch, C_NRM));
   }
 }
 
