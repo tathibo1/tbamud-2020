@@ -455,8 +455,11 @@
 #define APPLY_SAVING_PETRI     22	/**< Apply to save throw: petrif	*/
 #define APPLY_SAVING_BREATH    23	/**< Apply to save throw: breath	*/
 #define APPLY_SAVING_SPELL     24	/**< Apply to save throw: spells	*/
+#define APPLY_MANA_REGEN       25	/**< Apply to mana regen	*/
+#define APPLY_HIT_REGEN        26	/**< Apply to hit regen	*/
+#define APPLY_MOVE_REGEN       28	/**< Apply to move regen	*/
 /** Total number of applies */
-#define NUM_APPLIES   25
+#define NUM_APPLIES   29
 
 /* Equals the total number of SAVING_* defines in spells.h */
 #define NUM_OF_SAVING_THROWS  5
@@ -891,10 +894,13 @@ struct char_point_data
 {
   sh_int mana;     /**< Current mana level  */
   sh_int max_mana; /**< Max mana level */
+  sh_int base_mana_regen;
   sh_int hit;      /**< Curent hit point, or health, level */
   sh_int max_hit;  /**< Max hit point, or health, level */
+  sh_int base_hit_regen;
   sh_int move;     /**< Current move point, or stamina, level */
   sh_int max_move; /**< Max move point, or stamina, level */
+  sh_int base_move_regen;
 
   /** Current armor class. Internal use goes from -100 (totally armored) to
    * 100 (totally naked). Externally expressed as -10 (totally armored) to

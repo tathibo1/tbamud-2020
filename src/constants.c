@@ -501,6 +501,9 @@ const char *apply_types[] = {
   "SAVING_PETRI",
   "SAVING_BREATH",
   "SAVING_SPELL",
+  "MANA_REGEN",
+  "HIT_REGEN",
+  "MOVE_REGEN"
   "\n"
 };
 
