@@ -68,7 +68,12 @@ int mana_gain(struct char_data *ch)
   } else {
     gain = graf(age(ch)->year, 4, 8, 12, 16, 12, 10, 8);
 
+    /* Equipment calculations */
+    gain += GET_BASE_MANA_REGEN(ch);
+
     /* Class calculations */
+    if (IS_MAGIC_USER(ch) || IS_CLERIC(ch))
+      gain *= 2;
 
     /* Skill/Spell calculations */
 
@@ -84,9 +89,6 @@ int mana_gain(struct char_data *ch)
       gain += (gain / 4);	/* Divide by 4 */
       break;
     }
-
-    if (IS_MAGIC_USER(ch) || IS_CLERIC(ch))
-      gain *= 2;
 
     if ((GET_COND(ch, HUNGER) == 0) || (GET_COND(ch, THIRST) == 0))
       gain /= 4;
@@ -110,10 +112,16 @@ int hit_gain(struct char_data *ch)
 
     gain = graf(age(ch)->year, 8, 12, 20, 32, 16, 10, 4);
 
-    /* Class/Level calculations */
-    /* Skill/Spell calculations */
-    /* Position calculations    */
+    /* Equipment calculations */
+    gain += GET_BASE_HIT_REGEN(ch);
 
+    /* Class/Level calculations */
+    if (IS_MAGIC_USER(ch) || IS_CLERIC(ch))
+      gain /= 2;	/* Ouch. */
+
+    /* Skill/Spell calculations */
+
+    /* Position calculations    */
     switch (GET_POS(ch)) {
     case POS_SLEEPING:
       gain += (gain / 2);	/* Divide by 2 */
@@ -125,9 +133,6 @@ int hit_gain(struct char_data *ch)
       gain += (gain / 8);	/* Divide by 8 */
       break;
     }
-
-    if (IS_MAGIC_USER(ch) || IS_CLERIC(ch))
-      gain /= 2;	/* Ouch. */
 
     if ((GET_COND(ch, HUNGER) == 0) || (GET_COND(ch, THIRST) == 0))
       gain /= 4;
@@ -149,6 +154,9 @@ int move_gain(struct char_data *ch)
     gain = GET_LEVEL(ch);
   } else {
     gain = graf(age(ch)->year, 16, 20, 24, 20, 16, 12, 10);
+
+    /* Equipment calculations */
+    gain += GET_BASE_MOVE_REGEN(ch);
 
     /* Class/Level calculations */
     /* Skill/Spell calculations */

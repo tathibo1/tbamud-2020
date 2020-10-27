@@ -198,6 +198,18 @@ static void aff_apply_modify(struct char_data *ch, byte loc, sbyte mod, char *ms
     GET_SAVE(ch, SAVING_SPELL) += mod;
     break;
 
+  case APPLY_MANA_REGEN:
+    GET_BASE_MANA_REGEN(ch) += mod;
+    break;
+  
+  case APPLY_HIT_REGEN:
+    GET_BASE_HIT_REGEN(ch) += mod;
+    break;
+
+  case APPLY_MOVE_REGEN:
+    GET_BASE_MOVE_REGEN(ch) += mod;
+    break;
+
   default:
     log("SYSERR: Unknown apply adjust %d attempt (%s, affect_modify).", loc, __FILE__);
     break;

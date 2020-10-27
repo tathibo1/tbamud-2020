@@ -3558,7 +3558,10 @@ static struct zcheck_affs {
   {APPLY_SAVING_ROD,  -2,   2, "saving throw (rod)"},
   {APPLY_SAVING_PETRI,-2,   2, "saving throw (death)"},
   {APPLY_SAVING_BREATH,-2,  2, "saving throw (breath)"},
-  {APPLY_SAVING_SPELL,-2,   2, "saving throw (spell)"}
+  {APPLY_SAVING_SPELL,-2,   2, "saving throw (spell)"},
+  {APPLY_MANA_REGEN,  -20,  20,"mana regen"},
+  {APPLY_HIT_REGEN,  -20,  20, "hit regen"},
+  {APPLY_MOVE_REGEN,  -20,  20,"move regen"},
 };
 
 /* These are ABS() values. */

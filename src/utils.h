@@ -532,6 +532,10 @@ do                                                              \
 /** Current damage roll modifier for ch. */
 #define GET_DAMROLL(ch)   ((ch)->points.damroll)
 
+#define GET_BASE_MANA_REGEN(ch)   ((ch)->points.base_mana_regen)
+#define GET_BASE_HIT_REGEN(ch)   ((ch)->points.base_hit_regen)
+#define GET_BASE_MOVE_REGEN(ch)   ((ch)->points.base_move_regen)
+
 /** Current position (standing, sitting) of ch. */
 #define GET_POS(ch)	  ((ch)->char_specials.position)
 /** Unique ID of ch. */
