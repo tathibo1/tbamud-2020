@@ -966,8 +966,8 @@ ACMD(do_mtransform)
 
     GET_WAS_IN(&tmpmob) = GET_WAS_IN(ch);
     if (keep_hp) {
-      GET_HIT(&tmpmob) = GET_HIT(ch);
-      GET_MAX_HIT(&tmpmob) = GET_MAX_HIT(ch);
+      SET_HIT(&tmpmob) = GET_HIT_INT(ch);
+      SET_MAX_HIT(&tmpmob) = GET_MAX_HIT_INT(ch);
       GET_EXP(&tmpmob) = GET_EXP(ch);
     }
     GET_GOLD(&tmpmob) = GET_GOLD(ch);

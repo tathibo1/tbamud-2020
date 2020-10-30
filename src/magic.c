@@ -245,7 +245,7 @@ int mag_damage(int level, struct char_data *ch, struct char_data *victim,
     dam = dice(6, 8) + 6;
     if (IS_EVIL(ch)) {
       victim = ch;
-      dam = GET_HIT(ch) - 1;
+      dam = GET_HIT_INT(ch) - 1;
     } else if (IS_GOOD(victim)) {
       act("The gods protect $N.", FALSE, ch, 0, victim, TO_CHAR);
       return (0);
@@ -255,7 +255,7 @@ int mag_damage(int level, struct char_data *ch, struct char_data *victim,
     dam = dice(6, 8) + 6;
     if (IS_GOOD(ch)) {
       victim = ch;
-      dam = GET_HIT(ch) - 1;
+      dam = GET_HIT_INT(ch) - 1;
     } else if (IS_EVIL(victim)) {
       act("The gods protect $N.", FALSE, ch, 0, victim, TO_CHAR);
       return (0);
@@ -820,8 +820,8 @@ void mag_points(int level, struct char_data *ch, struct char_data *victim,
     send_to_char(victim, "A warm feeling floods your body.\r\n");
     break;
   }
-  GET_HIT(victim) = MIN(GET_MAX_HIT(victim), GET_HIT(victim) + healing);
-  GET_MOVE(victim) = MIN(GET_MAX_MOVE(victim), GET_MOVE(victim) + move);
+  SET_HIT(victim) = MIN(GET_MAX_HIT_INT(victim), GET_HIT_INT(victim) + healing);
+  SET_MOVE(victim) = MIN(GET_MAX_MOVE_INT(victim), GET_MOVE_INT(victim) + move);
   update_pos(victim);
 }
 

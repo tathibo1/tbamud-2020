@@ -493,11 +493,11 @@ ACMD(do_gen_comm)
     return;
   }
   if (subcmd == SCMD_HOLLER) {
-    if (GET_MOVE(ch) < CONFIG_HOLLER_MOVE_COST) {
+    if (GET_MOVE_INT(ch) < CONFIG_HOLLER_MOVE_COST) {
       send_to_char(ch, "You're too exhausted to holler.\r\n");
       return;
     } else
-      GET_MOVE(ch) -= CONFIG_HOLLER_MOVE_COST;
+      GET_MOVE_FLOAT(ch) -= CONFIG_HOLLER_MOVE_COST;
   }
   /* Set up the color on code. */
   strlcpy(color_on, com_msgs[subcmd][3], sizeof(color_on));

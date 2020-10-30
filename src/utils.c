@@ -71,10 +71,26 @@ int MIN(int a, int b)
   return (a < b ? a : b);
 }
 
+/** Return the smaller number. Original note: Be wary of sign issues with this.
+ * @param a The first number.
+ * @param b The second number. */
+float MIN_FLOAT(float a, float b)
+{
+  return (a < b ? a : b);
+}
+
 /** Return the larger number. Original note: Be wary of sign issues with this.
  * @param a The first number.
  * @param b The second number. */
 int MAX(int a, int b)
+{
+  return (a > b ? a : b);
+}
+
+/** Return the larger number. Original note: Be wary of sign issues with this.
+ * @param a The first number.
+ * @param b The second number. */
+float MAX_FLOAT(float a, float b)
 {
   return (a > b ? a : b);
 }

@@ -991,6 +991,7 @@ void heartbeat(int heart_pulse)
   if (!(heart_pulse % PASSES_PER_SEC)) {    /* EVERY second */
     msdp_update();
     next_tick--;
+    pulse_regen();
   }
 
   if (!(heart_pulse % PULSE_ZONE))
@@ -1149,36 +1150,36 @@ static char *make_prompt(struct descriptor_data *d)
     /* show only when below 25% */
     if (PRF_FLAGGED(d->character, PRF_DISPAUTO) && len < sizeof(prompt)) {
       struct char_data *ch = d->character;
-      if (GET_HIT(ch) << 2 < GET_MAX_HIT(ch) ) {
-        count = snprintf(prompt + len, sizeof(prompt) - len, "%dH ", GET_HIT(ch));
+      if (GET_HIT_INT(ch) << 2 < GET_MAX_HIT_INT(ch) ) {
+        count = snprintf(prompt + len, sizeof(prompt) - len, "%dH ", GET_HIT_INT(ch));
         if (count >= 0)
           len += count;
       }
-      if (GET_MANA(ch) << 2 < GET_MAX_MANA(ch) && len < sizeof(prompt)) {
-        count = snprintf(prompt + len, sizeof(prompt) - len, "%dM ", GET_MANA(ch));
+      if (GET_MANA_INT(ch) << 2 < GET_MAX_MANA_INT(ch) && len < sizeof(prompt)) {
+        count = snprintf(prompt + len, sizeof(prompt) - len, "%dM ", GET_MANA_INT(ch));
         if (count >= 0)
           len += count;
       }
-      if (GET_MOVE(ch) << 2 < GET_MAX_MOVE(ch) && len < sizeof(prompt)) {
-        count = snprintf(prompt + len, sizeof(prompt) - len, "%dV ", GET_MOVE(ch));
+      if (GET_MOVE_INT(ch) << 2 < GET_MAX_MOVE_INT(ch) && len < sizeof(prompt)) {
+        count = snprintf(prompt + len, sizeof(prompt) - len, "%dV ", GET_MOVE_INT(ch));
         if (count >= 0)
           len += count;
       }
     } else { /* not auto prompt */
       if (PRF_FLAGGED(d->character, PRF_DISPHP) && len < sizeof(prompt)) {
-        count = snprintf(prompt + len, sizeof(prompt) - len, "%dH ", GET_HIT(d->character));
+        count = snprintf(prompt + len, sizeof(prompt) - len, "%dH ", GET_HIT_INT(d->character));
         if (count >= 0)
           len += count;
       }
 
       if (PRF_FLAGGED(d->character, PRF_DISPMANA) && len < sizeof(prompt)) {
-        count = snprintf(prompt + len, sizeof(prompt) - len, "%dM ", GET_MANA(d->character));
+        count = snprintf(prompt + len, sizeof(prompt) - len, "%dM ", GET_MANA_INT(d->character));
         if (count >= 0)
           len += count;
       }
 
       if (PRF_FLAGGED(d->character, PRF_DISPMOVE) && len < sizeof(prompt)) {
-        count = snprintf(prompt + len, sizeof(prompt) - len, "%dV ", GET_MOVE(d->character));
+        count = snprintf(prompt + len, sizeof(prompt) - len, "%dV ", GET_MOVE_INT(d->character));
         if (count >= 0)
           len += count;
       }
@@ -2839,25 +2840,25 @@ static void msdp_update( void )
       MSDPSetNumber( d, eMSDP_ALIGNMENT, GET_ALIGNMENT(ch) );
       MSDPSetNumber( d, eMSDP_EXPERIENCE, GET_EXP(ch) );
 
-      MSDPSetNumber( d, eMSDP_HEALTH, GET_HIT(ch) );
-      MSDPSetNumber( d, eMSDP_HEALTH_MAX, GET_MAX_HIT(ch) );
+      MSDPSetNumber( d, eMSDP_HEALTH, GET_HIT_INT(ch) );
+      MSDPSetNumber( d, eMSDP_HEALTH_MAX, GET_MAX_HIT_INT(ch) );
       MSDPSetNumber( d, eMSDP_LEVEL, GET_LEVEL(ch) );
 
       sprinttype( ch->player.chclass, pc_class_types, buf, sizeof(buf) );
       MSDPSetString( d, eMSDP_CLASS, buf );
 
-      MSDPSetNumber( d, eMSDP_MANA, GET_MANA(ch) );
-      MSDPSetNumber( d, eMSDP_MANA_MAX, GET_MAX_MANA(ch) );
+      MSDPSetNumber( d, eMSDP_MANA, GET_MANA_INT(ch) );
+      MSDPSetNumber( d, eMSDP_MANA_MAX, GET_MAX_MANA_INT(ch) );
       MSDPSetNumber( d, eMSDP_WIMPY, GET_WIMP_LEV(ch) );
       MSDPSetNumber( d, eMSDP_MONEY, GET_GOLD(ch) );
-      MSDPSetNumber( d, eMSDP_MOVEMENT, GET_MOVE(ch) );
-      MSDPSetNumber( d, eMSDP_MOVEMENT_MAX, GET_MAX_MOVE(ch) );
+      MSDPSetNumber( d, eMSDP_MOVEMENT, GET_MOVE_INT(ch) );
+      MSDPSetNumber( d, eMSDP_MOVEMENT_MAX, GET_MAX_MOVE_INT(ch) );
       MSDPSetNumber( d, eMSDP_AC, compute_armor_class(ch) );
 
       /* This would be better moved elsewhere */
       if ( pOpponent != NULL )
       {
-          int hit_points = (GET_HIT(pOpponent) * 100) / GET_MAX_HIT(pOpponent);
+          int hit_points = (GET_HIT_INT(pOpponent) * 100) / GET_MAX_HIT_INT(pOpponent);
           MSDPSetNumber( d, eMSDP_OPPONENT_HEALTH, hit_points );
           MSDPSetNumber( d, eMSDP_OPPONENT_HEALTH_MAX, 100 );
           MSDPSetNumber( d, eMSDP_OPPONENT_LEVEL, GET_LEVEL(pOpponent) );

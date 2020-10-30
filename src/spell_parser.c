@@ -604,7 +604,7 @@ ACMD(do_cast)
     return;
   }
   mana = mag_manacost(ch, spellnum);
-  if ((mana > 0) && (GET_MANA(ch) < mana) && (GET_LEVEL(ch) < LVL_IMMORT)) {
+  if ((mana > 0) && (GET_MANA_INT(ch) < mana) && (GET_LEVEL(ch) < LVL_IMMORT)) {
     send_to_char(ch, "You haven't the energy to cast that spell!\r\n");
     return;
   }
@@ -615,14 +615,14 @@ ACMD(do_cast)
     if (!tch || !skill_message(0, ch, tch, spellnum))
       send_to_char(ch, "You lost your concentration!\r\n");
     if (mana > 0)
-      GET_MANA(ch) = MAX(0, MIN(GET_MAX_MANA(ch), GET_MANA(ch) - (mana / 2)));
+      SET_MANA(ch) = MAX(0, MIN(GET_MAX_MANA_INT(ch), GET_MANA_INT(ch) - (mana / 2)));
     if (SINFO.violent && tch && IS_NPC(tch))
       hit(tch, ch, TYPE_UNDEFINED);
   } else { /* cast spell returns 1 on success; subtract mana & set waitstate */
     if (cast_spell(ch, tch, tobj, spellnum)) {
       WAIT_STATE(ch, PULSE_VIOLENCE);
       if (mana > 0)
-	GET_MANA(ch) = MAX(0, MIN(GET_MAX_MANA(ch), GET_MANA(ch) - mana));
+	      SET_MANA(ch) = MAX(0, MIN(GET_MAX_MANA_INT(ch), GET_MANA_INT(ch) - mana));
     }
   }
 }

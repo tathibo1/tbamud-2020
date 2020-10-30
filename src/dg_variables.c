@@ -765,10 +765,10 @@ void find_replacement(void *go, struct script_data *sc, trig_data *trig,
           else if (!str_cmp(field, "hitp")) {
             if (subfield && *subfield) {
               int addition = atoi(subfield);
-              GET_HIT(c) += addition;
+              SET_HIT(c) += addition;
               update_pos(c);
             }
-            snprintf(str, slen, "%d", GET_HIT(c));
+            snprintf(str, slen, "%d", GET_HIT_INT(c));
           }
           else if (!str_cmp(field, "hitroll")) {
             if (subfield && *subfield) {
@@ -862,9 +862,9 @@ void find_replacement(void *go, struct script_data *sc, trig_data *trig,
           if (!str_cmp(field, "mana")) {
             if (subfield && *subfield) {
               int addition = atoi(subfield);
-              GET_MANA(c) += addition;
+              SET_MANA(c) += addition;
             }
-            snprintf(str, slen, "%d", GET_MANA(c));
+            snprintf(str, slen, "%d", GET_MANA_INT(c));
           }
           else if (!str_cmp(field, "master")) {
             if (!c->master)
@@ -875,30 +875,30 @@ void find_replacement(void *go, struct script_data *sc, trig_data *trig,
           else if (!str_cmp(field, "maxhitp")) {
             if (subfield && *subfield) {
               int addition = atoi(subfield);
-              GET_MAX_HIT(c) = MAX(GET_MAX_HIT(c) + addition, 1);
+              SET_MAX_HIT(c) = MAX(GET_MAX_HIT_INT(c) + addition, 1);
             }
-            snprintf(str, slen, "%d", GET_MAX_HIT(c));
+            snprintf(str, slen, "%d", GET_MAX_HIT_INT(c));
           }
           else if (!str_cmp(field, "maxmana")) {
             if (subfield && *subfield) {
               int addition = atoi(subfield);
-              GET_MAX_MANA(c) = MAX(GET_MAX_MANA(c) + addition, 1);
+              SET_MAX_MANA(c) = MAX(GET_MAX_MANA_INT(c) + addition, 1);
             }
-            snprintf(str, slen, "%d", GET_MAX_MANA(c));
+            snprintf(str, slen, "%d", GET_MAX_MANA_INT(c));
           }
           else if (!str_cmp(field, "maxmove")) {
             if (subfield && *subfield) {
               int addition = atoi(subfield);
-              GET_MAX_MOVE(c) = MAX(GET_MAX_MOVE(c) + addition, 1);
+              SET_MAX_MOVE(c) = MAX(GET_MAX_MOVE_INT(c) + addition, 1);
             }
-            snprintf(str, slen, "%d", GET_MAX_MOVE(c));
+            snprintf(str, slen, "%d", GET_MAX_MOVE_INT(c));
           }
           else if (!str_cmp(field, "move")) {
             if (subfield && *subfield) {
               int addition = atoi(subfield);
-              GET_MOVE(c) += addition;
+              SET_MOVE(c) += addition;
             }
-            snprintf(str, slen, "%d", GET_MOVE(c));
+            snprintf(str, slen, "%d", GET_MOVE_INT(c));
           }
           break;
         case 'n':

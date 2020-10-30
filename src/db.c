@@ -1544,13 +1544,13 @@ static void parse_simple_mob(FILE *mob_f, int i, int nr)
   GET_AC(mob_proto + i) = 10 * t[2];
 
   /* max hit = 0 is a flag that H, M, V is xdy+z */
-  GET_MAX_HIT(mob_proto + i) = 0;
-  GET_HIT(mob_proto + i) = t[3];
-  GET_MANA(mob_proto + i) = t[4];
-  GET_MOVE(mob_proto + i) = t[5];
+  SET_MAX_HIT(mob_proto + i) = 0;
+  SET_HIT(mob_proto + i) = t[3];
+  SET_MANA(mob_proto + i) = t[4];
+  SET_MOVE(mob_proto + i) = t[5];
 
-  GET_MAX_MANA(mob_proto + i) = 10;
-  GET_MAX_MOVE(mob_proto + i) = 50;
+  SET_MAX_MANA(mob_proto + i) = 10;
+  SET_MAX_MOVE(mob_proto + i) = 50;
 
   mob_proto[i].mob_specials.damnodice = t[6];
   mob_proto[i].mob_specials.damsizedice = t[7];
@@ -3436,12 +3436,12 @@ void reset_char(struct char_data *ch)
   ch->char_specials.carry_weight = 0;
   ch->char_specials.carry_items = 0;
 
-  if (GET_HIT(ch) <= 0)
-    GET_HIT(ch) = 1;
-  if (GET_MOVE(ch) <= 0)
-    GET_MOVE(ch) = 1;
-  if (GET_MANA(ch) <= 0)
-    GET_MANA(ch) = 1;
+  if (GET_HIT_INT(ch) <= 0)
+    SET_HIT(ch) = 1;
+  if (GET_MOVE_INT(ch) <= 0)
+    SET_MOVE(ch) = 1;
+  if (GET_MANA_INT(ch) <= 0)
+    SET_MANA(ch) = 1;
 
   GET_LAST_TELL(ch) = NOBODY;
 }
@@ -3489,12 +3489,12 @@ void init_char(struct char_data *ch)
     GET_EXP(ch) = 7000000;
 
     /* The implementor never goes through do_start(). */
-    GET_MAX_HIT(ch) = 500;
-    GET_MAX_MANA(ch) = 100;
-    GET_MAX_MOVE(ch) = 82;
-    GET_HIT(ch) = GET_MAX_HIT(ch);
-    GET_MANA(ch) = GET_MAX_MANA(ch);
-    GET_MOVE(ch) = GET_MAX_MOVE(ch);
+    SET_MAX_HIT(ch) = 500;
+    SET_MAX_MANA(ch) = 100;
+    SET_MAX_MOVE(ch) = 82;
+    SET_HIT(ch) = GET_MAX_HIT_INT(ch);
+    SET_MANA(ch) = GET_MAX_MANA_INT(ch);
+    SET_MOVE(ch) = GET_MAX_MOVE_INT(ch);
   }
 
   set_title(ch, NULL);

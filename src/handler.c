@@ -149,15 +149,15 @@ static void aff_apply_modify(struct char_data *ch, byte loc, sbyte mod, char *ms
     break;
 
   case APPLY_MANA:
-    GET_MAX_MANA(ch) += mod;
+    SET_MAX_MANA(ch) += mod;
     break;
 
   case APPLY_HIT:
-    GET_MAX_HIT(ch) += mod;
+    SET_MAX_HIT(ch) += mod;
     break;
 
   case APPLY_MOVE:
-    GET_MAX_MOVE(ch) += mod;
+    SET_MAX_MOVE(ch) += mod;
     break;
 
   case APPLY_GOLD:
@@ -199,15 +199,15 @@ static void aff_apply_modify(struct char_data *ch, byte loc, sbyte mod, char *ms
     break;
 
   case APPLY_MANA_REGEN:
-    GET_BASE_MANA_REGEN(ch) += mod;
+    SET_BASE_MANA_REGEN(ch) += mod;
     break;
   
   case APPLY_HIT_REGEN:
-    GET_BASE_HIT_REGEN(ch) += mod;
+    SET_BASE_HIT_REGEN(ch) += mod;
     break;
 
   case APPLY_MOVE_REGEN:
-    GET_BASE_MOVE_REGEN(ch) += mod;
+    SET_BASE_MOVE_REGEN(ch) += mod;
     break;
 
   default:

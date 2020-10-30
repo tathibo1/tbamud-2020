@@ -1417,9 +1417,9 @@ void do_start(struct char_data *ch)
 
   set_title(ch, NULL);
 
-  GET_MAX_HIT(ch)  = 10;
-  GET_MAX_MANA(ch) = 100;
-  GET_MAX_MOVE(ch) = 82;
+  SET_MAX_HIT(ch)  = 10;
+  SET_MAX_MANA(ch) = 100;
+  SET_MAX_MOVE(ch) = 82;
 
   switch (GET_CLASS(ch)) {
 
@@ -1444,9 +1444,9 @@ void do_start(struct char_data *ch)
 
   advance_level(ch);
 
-  GET_HIT(ch) = GET_MAX_HIT(ch);
-  GET_MANA(ch) = GET_MAX_MANA(ch);
-  GET_MOVE(ch) = GET_MAX_MOVE(ch);
+  SET_HIT(ch) = GET_MAX_HIT_FLOAT(ch);
+  SET_MANA(ch) = GET_MAX_MANA_FLOAT(ch);
+  SET_MOVE(ch) = GET_MAX_MOVE_FLOAT(ch);
 
   GET_COND(ch, THIRST) = 24;
   GET_COND(ch, HUNGER) = 24;
