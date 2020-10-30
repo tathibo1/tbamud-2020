@@ -1,5 +1,5 @@
 #4500
-An Unused Corner~
+Entrance to the Woodland Monestary~
    You have come to an unused corner of the garden.  The land has been neatly
 worked, but nothing seems to have been planted yet.  Various gardening
 implements are scattered about subject to the weather.
@@ -9,6 +9,10 @@ D0
 ~
 ~
 0 0 4523
+D2
+~
+~
+0 0 6000
 D3
 ~
 ~
@@ -313,7 +317,7 @@ sitting along the pews.  A large tapestry sits behind him.
 D4
 ~
 tapestry~
-2 4518 4517
+1 4518 4517
 D5
 ~
 ~

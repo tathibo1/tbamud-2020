@@ -2,6 +2,8 @@
 Gnoff~
 Woodland Monastery~
 4500 4599 20 1 d 0 0 0 12 15
+M 0 4525 1 4525 	(the gopher)
+E 1 4503 100 1 	(a ring forged of a fallen star)
 M 0 4500 4 4505 	(the monk)
 E 1 4501 100 5 	(some robes)
 E 1 4502 100 8 	(a pair of sandals)
@@ -46,7 +48,6 @@ R 0 4524 4524 -1 	(a bunch of strawberries)
 R 0 4524 4524 -1 	(a bunch of strawberries)
 O 0 4524 100 4524 	(a bunch of strawberries)
 O 0 4524 100 4524 	(a bunch of strawberries)
-M 0 4525 1 4525 	(the gopher)
 D 0 4515 3 2 	(The Top of the Dark Staircase)
 D 0 4515 1 1 	(The Top of the Dark Staircase)
 M 0 4518 1 4518 	(Yeral)

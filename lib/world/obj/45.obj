@@ -8,6 +8,8 @@ A red feather lies here.~
 1 300 0 0 0
 A
 17 -5
+A
+25 5
 #4501
 robes cloth bundle~
 some robes~
@@ -20,6 +22,8 @@ A
 4 2
 A
 12 25
+A
+25 2
 #4502
 sandals shoes~
 a pair of sandals~
@@ -32,6 +36,21 @@ A
 3 1
 A
 4 1
+A
+25 3
+#4503
+ring fallen star~
+a ring forged of a fallen star~
+A ring forged of a fallen star is here.~
+This ring is forged from the metal left behind from the falling of a star.
+~
+11 a 0 0 0 ab 0 0 0 0 0 0 0
+0 0 0 0
+1 1 0 0 0
+A
+24 -1
+A
+25 3
 #4514
 treasure gold~
 a small pile of gold~
@@ -45,9 +64,11 @@ chimera statue~
 a statue of a chimera~
 A small statue is here.~
 ~
-12 c 0 0 0 a 0 0 0 0 0 0 0
+0 0 0 0 0 ao 0 0 0 0 0 0 0
 0 0 0 0
 5 1 0 0 0
+A
+25 3
 #4518
 phoenix claw~
 a phoenix claw~
@@ -62,6 +83,8 @@ A
 18 3
 A
 19 3
+A
+25 2
 #4520
 celery stalk~
 a stalk of celery~
