@@ -892,15 +892,15 @@ struct char_ability_data
 /** Character 'points', or health statistics. */
 struct char_point_data
 {
-  sh_int mana;     /**< Current mana level  */
-  sh_int max_mana; /**< Max mana level */
-  sh_int base_mana_regen;
-  sh_int hit;      /**< Curent hit point, or health, level */
-  sh_int max_hit;  /**< Max hit point, or health, level */
-  sh_int base_hit_regen;
-  sh_int move;     /**< Current move point, or stamina, level */
-  sh_int max_move; /**< Max move point, or stamina, level */
-  sh_int base_move_regen;
+  float mana;     /**< Current mana level  */
+  float max_mana; /**< Max mana level */
+  float base_mana_regen;
+  float hit;      /**< Curent hit point, or health, level */
+  float max_hit;  /**< Max hit point, or health, level */
+  float base_hit_regen;
+  float move;     /**< Current move point, or stamina, level */
+  float max_move; /**< Max move point, or stamina, level */
+  float base_move_regen;
 
   /** Current armor class. Internal use goes from -100 (totally armored) to
    * 100 (totally naked). Externally expressed as -10 (totally armored) to

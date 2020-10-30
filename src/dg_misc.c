@@ -258,9 +258,9 @@ void send_char_pos(struct char_data *ch, int dam)
       send_to_char(ch, "You are dead!  Sorry...\r\n");
       break;
     default:                        /* >= POSITION SLEEPING */
-      if (dam > (GET_MAX_HIT(ch) >> 2))
+      if (dam > (GET_MAX_HIT_INT(ch) >> 2))
         act("That really did HURT!", FALSE, ch, 0, 0, TO_CHAR);
-      if (GET_HIT(ch) < (GET_MAX_HIT(ch) >> 2))
+      if (GET_HIT_INT(ch) < (GET_MAX_HIT_INT(ch) >> 2))
         send_to_char(ch, "%sYou wish that your wounds would stop BLEEDING so much!%s\r\n",
                          CCRED(ch, C_SPR), CCNRM(ch, C_SPR));
   }
@@ -294,8 +294,8 @@ void script_damage(struct char_data *vict, int dam)
     return;
   }
 
-  GET_HIT(vict) -= dam;
-  GET_HIT(vict) = MIN(GET_HIT(vict), GET_MAX_HIT(vict));
+  SET_HIT(vict) -= dam;
+  SET_HIT(vict) = MIN(GET_HIT_INT(vict), GET_MAX_HIT_INT(vict));
 
   update_pos(vict);
   send_char_pos(vict, dam);

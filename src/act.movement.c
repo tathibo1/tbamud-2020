@@ -253,7 +253,7 @@ int do_simple_move(struct char_data *ch, int dir, int need_specials_check)
 		   movement_loss[SECT(going_to)]) / 2;
 
   /* Move Point Requirement Check */
-  if (GET_MOVE(ch) < need_movement && !IS_NPC(ch))
+  if (GET_MOVE_INT(ch) < need_movement && !IS_NPC(ch))
   {
     if (need_specials_check && ch->master)
       send_to_char(ch, "You are too exhausted to follow.\r\n");
@@ -271,7 +271,7 @@ int do_simple_move(struct char_data *ch, int dir, int need_specials_check)
   /*---------------------------------------------------------------------*/
   /* If applicable, subtract movement cost. */
   if (GET_LEVEL(ch) < LVL_IMMORT && !IS_NPC(ch))
-    GET_MOVE(ch) -= need_movement;
+    SET_MOVE(ch) -= need_movement;
 
   /* Generate the leave message and display to others in the was_in room. */
   if (!AFF_FLAGGED(ch, AFF_SNEAK))

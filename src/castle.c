@@ -596,7 +596,7 @@ static int castle_twin_proc(struct char_data *ch, int cmd, char *arg, int ctlnum
   }
 
   if ((twin = find_npc_by_name(ch, twinname, strlen(twinname))) != NULL)
-    if (FIGHTING(twin) && 2 * GET_HIT(twin) < GET_HIT(ch))
+    if (FIGHTING(twin) && 2 * GET_HIT_INT(twin) < GET_HIT_INT(ch))
       do_npc_rescue(ch, twin);
 
   if (GET_POS(ch) != POS_FIGHTING)

@@ -94,15 +94,15 @@ int compute_armor_class(struct char_data *ch)
 
 void update_pos(struct char_data *victim)
 {
-  if ((GET_HIT(victim) > 0) && (GET_POS(victim) > POS_STUNNED))
+  if ((GET_HIT_INT(victim) > 0) && (GET_POS(victim) > POS_STUNNED))
     return;
-  else if (GET_HIT(victim) > 0)
+  else if (GET_HIT_INT(victim) > 0)
     GET_POS(victim) = POS_STANDING;
-  else if (GET_HIT(victim) <= -11)
+  else if (GET_HIT_INT(victim) <= -11)
     GET_POS(victim) = POS_DEAD;
-  else if (GET_HIT(victim) <= -6)
+  else if (GET_HIT_INT(victim) <= -6)
     GET_POS(victim) = POS_MORTALLYW;
-  else if (GET_HIT(victim) <= -3)
+  else if (GET_HIT_INT(victim) <= -3)
     GET_POS(victim) = POS_INCAP;
   else
     GET_POS(victim) = POS_STUNNED;
@@ -654,7 +654,7 @@ int damage(struct char_data *ch, struct char_data *victim, int dam, int attackty
 
   /* Set the maximum damage per round and subtract the hit points */
   dam = MAX(MIN(dam, 100), 0);
-  GET_HIT(victim) -= dam;
+  SET_HIT(victim) -= dam;
 
   /* Gain exp for the hit */
   if (ch != victim)
@@ -702,17 +702,17 @@ int damage(struct char_data *ch, struct char_data *victim, int dam, int attackty
     break;
 
   default:			/* >= POSITION SLEEPING */
-    if (dam > (GET_MAX_HIT(victim) / 4))
+    if (dam > (GET_MAX_HIT_INT(victim) / 4))
       send_to_char(victim, "That really did HURT!\r\n");
 
-    if (GET_HIT(victim) < (GET_MAX_HIT(victim) / 4)) {
+    if (GET_HIT_INT(victim) < (GET_MAX_HIT_INT(victim) / 4)) {
       send_to_char(victim, "%sYou wish that your wounds would stop BLEEDING so much!%s\r\n",
 		CCRED(victim, C_SPR), CCNRM(victim, C_SPR));
       if (ch != victim && MOB_FLAGGED(victim, MOB_WIMPY))
 	do_flee(victim, NULL, 0, 0);
     }
     if (!IS_NPC(victim) && GET_WIMP_LEV(victim) && (victim != ch) &&
-	GET_HIT(victim) < GET_WIMP_LEV(victim) && GET_HIT(victim) > 0) {
+	GET_HIT_INT(victim) < GET_WIMP_LEV(victim) && GET_HIT_INT(victim) > 0) {
       send_to_char(victim, "You wimp out, and attempt to flee!\r\n");
       do_flee(victim, NULL, 0, 0);
     }

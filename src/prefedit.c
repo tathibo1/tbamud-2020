@@ -417,7 +417,7 @@ void prefedit_parse(struct descriptor_data * d, char *arg)
 
     case 'w':
     case 'W':
-      send_to_char(d->character, "Enter HP at which to flee (0-%d): ", MIN(GET_MAX_HIT(d->character)/2, 500));
+      send_to_char(d->character, "Enter HP at which to flee (0-%d): ", MIN(GET_MAX_HIT_INT(d->character)/2, 500));
       OLC_MODE(d) = PREFEDIT_WIMPY;
       return;
 

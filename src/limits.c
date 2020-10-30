@@ -58,9 +58,9 @@ static int graf(int grafage, int p0, int p1, int p2, int p3, int p4, int p5, int
  * that a character's age will now only affect the HMV gain per tick, and _not_
  * the HMV maximums. */
 /* manapoint gain pr. game hour */
-int mana_gain(struct char_data *ch)
+float mana_gain(struct char_data *ch)
 {
-  int gain;
+  float gain;
 
   if (IS_NPC(ch)) {
     /* Neat and fast */
@@ -69,7 +69,7 @@ int mana_gain(struct char_data *ch)
     gain = graf(age(ch)->year, 4, 8, 12, 16, 12, 10, 8);
 
     /* Equipment calculations */
-    gain += GET_BASE_MANA_REGEN(ch);
+    gain += GET_BASE_MANA_REGEN_FLOAT(ch);
 
     /* Class calculations */
     if (IS_MAGIC_USER(ch) || IS_CLERIC(ch))
@@ -101,9 +101,9 @@ int mana_gain(struct char_data *ch)
 }
 
 /* Hitpoint gain pr. game hour */
-int hit_gain(struct char_data *ch)
+float hit_gain(struct char_data *ch)
 {
-  int gain;
+  float gain;
 
   if (IS_NPC(ch)) {
     /* Neat and fast */
@@ -113,7 +113,7 @@ int hit_gain(struct char_data *ch)
     gain = graf(age(ch)->year, 8, 12, 20, 32, 16, 10, 4);
 
     /* Equipment calculations */
-    gain += GET_BASE_HIT_REGEN(ch);
+    gain += GET_BASE_HIT_REGEN_FLOAT(ch);
 
     /* Class/Level calculations */
     if (IS_MAGIC_USER(ch) || IS_CLERIC(ch))
@@ -145,9 +145,9 @@ int hit_gain(struct char_data *ch)
 }
 
 /* move gain pr. game hour */
-int move_gain(struct char_data *ch)
+float move_gain(struct char_data *ch)
 {
-  int gain;
+  float gain;
 
   if (IS_NPC(ch)) {
     /* Neat and fast */
@@ -156,7 +156,7 @@ int move_gain(struct char_data *ch)
     gain = graf(age(ch)->year, 16, 20, 24, 20, 16, 12, 10);
 
     /* Equipment calculations */
-    gain += GET_BASE_MOVE_REGEN(ch);
+    gain += GET_BASE_MOVE_REGEN_FLOAT(ch);
 
     /* Class/Level calculations */
     /* Skill/Spell calculations */
@@ -383,75 +383,21 @@ static void check_idling(struct char_data *ch)
   }
 }
 
-/* Apply hit/mana/move regen every pulse (intended for every second) */
-void pulse_regen(int next_tick) {
+/*
+* Apply hit/mana/move regen every pulse (every second)
+*
+* We are assuming this function will be called every second/pulse. We do this
+* in order to regen a bit of hit/mana/move every few seconds once per tick,
+* which happens every SECS_PER_MUD_HOUR seconds.
+*/
+void pulse_regen() {
   struct char_data *i;
   
   for (i = character_list; i; i = i->next) {
-    //send_to_char(i, "next_tick %d\r\n", next_tick);
-    if (!IS_NPC(i)) {
-      // Hit regen
-      int hit_regen = hit_gain(i);
-      int hit_apply = 0;
-      if (hit_regen < SECS_PER_MUD_HOUR) {
-        /* If our regen is less that the number of seconds in a mud hour
-        we don't want to add mana every second. Instead, add 1 point every
-        second that's an even multiple of our regen */
-        if (!(next_tick % (SECS_PER_MUD_HOUR/hit_regen))) {
-          hit_apply = 1;
-        }
-      } else { // regen >= SECS_PER_MUD_HOUR
-        int remainder_apply = 0;
-        int remainder_regen = hit_regen % SECS_PER_MUD_HOUR;
-        if (remainder_regen && !(next_tick % (SECS_PER_MUD_HOUR/remainder_regen))) {
-          // For the portion of our regen that is not an even multiple of SECS_PER_MUD_HOUR
-          remainder_apply = 1;
-        }
-        hit_apply = (hit_regen / SECS_PER_MUD_HOUR) + remainder_apply;
-      }
-      GET_HIT(i) = MIN(MAX(GET_HIT(i) + hit_apply, 0), GET_MAX_HIT(i));
-
-      // Mana regen
-      int mana_regen = mana_gain(i);
-      int mana_apply = 0;
-      if (mana_regen < SECS_PER_MUD_HOUR) {
-        /* If our regen is less that the number of seconds in a mud hour
-        we don't want to add mana every second. Instead, add 1 point every
-        second that's an even multiple of our regen */
-        if (!(next_tick % (SECS_PER_MUD_HOUR/mana_regen))) {
-          mana_apply = 1;
-        }
-      } else { // regen >= SECS_PER_MUD_HOUR
-        int remainder_regen = mana_regen % SECS_PER_MUD_HOUR;
-        int remainder_apply = 0;
-        if (remainder_regen && !(next_tick % (SECS_PER_MUD_HOUR/remainder_regen))) {
-          // For the portion of our regen that is not an even multiple of SECS_PER_MUD_HOUR
-          remainder_apply = 1;
-        }
-        mana_apply = (mana_regen / SECS_PER_MUD_HOUR) + remainder_apply;
-      }
-      GET_MANA(i) = MIN(MAX(GET_MANA(i) + mana_apply, 0), GET_MAX_MANA(i));
-
-      // Move regen
-      int move_regen = move_gain(i);
-      int move_apply = 0;
-      if (move_regen < SECS_PER_MUD_HOUR) {
-        /* If our regen is less that the number of seconds in a mud hour
-        we don't want to add mana every second. Instead, add 1 point every
-        second that's an even multiple of our regen */
-        if (!(next_tick % (SECS_PER_MUD_HOUR/move_regen))) {
-          move_apply = 1;
-        }
-      } else { // hit_regen >= SECS_PER_MUD_HOUR
-        int remainder_regen = move_regen % SECS_PER_MUD_HOUR;
-        int remainder_apply = 0;
-        if (remainder_regen && !(next_tick % (SECS_PER_MUD_HOUR/remainder_regen))) {
-          // For the portion of our regen that is not an even multiple of SECS_PER_MUD_HOUR
-          remainder_apply = 1;
-        }
-        move_apply = (move_regen / SECS_PER_MUD_HOUR) + remainder_apply;
-      }
-      GET_MOVE(i) = MIN(MAX(GET_MOVE(i) + move_apply, 0), GET_MAX_MOVE(i));
+    if (!IS_NPC(i)) { // NPCs regen in point_update()
+      SET_HIT(i) = MIN_FLOAT(GET_HIT_FLOAT(i) + hit_gain(i)/SECS_PER_MUD_HOUR, GET_MAX_HIT_FLOAT(i));
+      SET_MANA(i) = MIN_FLOAT(GET_MANA_FLOAT(i) + mana_gain(i)/SECS_PER_MUD_HOUR, GET_MAX_MANA_FLOAT(i));
+      SET_MOVE(i) = MIN_FLOAT(GET_MOVE_FLOAT(i) + move_gain(i)/SECS_PER_MUD_HOUR, GET_MAX_MOVE_FLOAT(i));
     }
   }
 }
@@ -472,9 +418,9 @@ void point_update(void)
 
     if (GET_POS(i) >= POS_STUNNED) {
       if (IS_NPC(i)) {
-        GET_HIT(i) = MIN(GET_HIT(i) + hit_gain(i), GET_MAX_HIT(i));
-        GET_MANA(i) = MIN(GET_MANA(i) + mana_gain(i), GET_MAX_MANA(i));
-        GET_MOVE(i) = MIN(GET_MOVE(i) + move_gain(i), GET_MAX_MOVE(i));
+        GET_HIT_FLOAT(i) = MIN(GET_HIT_FLOAT(i) + hit_gain(i), GET_MAX_HIT_INT(i));
+        GET_MANA_FLOAT(i) = MIN(GET_MANA_FLOAT(i) + mana_gain(i), GET_MAX_MANA_INT(i));
+        GET_MOVE_FLOAT(i) = MIN(GET_MOVE_FLOAT(i) + move_gain(i), GET_MAX_MOVE_INT(i));
       }
       if (AFF_FLAGGED(i, AFF_POISON))
 	if (damage(i, i, 2, SPELL_POISON) == -1)

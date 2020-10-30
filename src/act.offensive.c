@@ -248,7 +248,7 @@ ACMD(do_flee)
       if (do_simple_move(ch, attempt, TRUE)) {
 	send_to_char(ch, "You flee head over heels.\r\n");
         if (was_fighting && !IS_NPC(ch)) {
-	  loss = GET_MAX_HIT(was_fighting) - GET_HIT(was_fighting);
+	  loss = GET_MAX_HIT_INT(was_fighting) - GET_HIT_INT(was_fighting);
 	  loss *= GET_LEVEL(was_fighting);
 	  gain_exp(ch, -loss);
         }
@@ -549,7 +549,7 @@ ACMD(do_bandage)
     return;
   }
 
-  if (GET_HIT(vict) >= 0) {
+  if (GET_HIT_INT(vict) >= 0) {
     send_to_char(ch, "You can only bandage someone who is close to death.\r\n");
     return;
   }
@@ -572,5 +572,5 @@ ACMD(do_bandage)
     vict, TO_NOTVICT);
   act("Someone bandages you, and you feel a bit better now.",
          FALSE, ch, 0, vict, TO_VICT);
-  GET_HIT(vict) = 0;
+  SET_HIT(vict) = 0;
 }

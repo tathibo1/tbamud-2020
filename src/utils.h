@@ -103,6 +103,8 @@ unsigned long circle_random(void);
 
 int MAX(int a, int b);
 int MIN(int a, int b);
+float MAX_FLOAT(float a, float b);
+float MIN_FLOAT(float a, float b);
 char *CAP(char *txt);
 
 /* Followers */
@@ -121,14 +123,14 @@ int	do_simple_move(struct char_data *ch, int dir, int following);
 int	perform_move(struct char_data *ch, int dir, int following);
 
 /* in limits.c */
-int	mana_gain(struct char_data *ch);
-int	hit_gain(struct char_data *ch);
-int	move_gain(struct char_data *ch);
+float	mana_gain(struct char_data *ch);
+float	hit_gain(struct char_data *ch);
+float	move_gain(struct char_data *ch);
 void set_title(struct char_data *ch, char *title);
 void gain_exp(struct char_data *ch, int gain);
 void gain_exp_regardless(struct char_data *ch, int gain);
 void gain_condition(struct char_data *ch, int condition, int value);
-void pulse_regen(int next_tick);
+void pulse_regen();
 void point_update(void);
 void update_pos(struct char_data *victim);
 void run_autowiz(void);
@@ -513,17 +515,41 @@ do                                                              \
 /** Armor class of ch. */
 #define GET_AC(ch)        ((ch)->points.armor)
 /** Current hit points (health) of ch. */
-#define GET_HIT(ch)	  ((ch)->points.hit)
+#define GET_HIT_FLOAT(ch)	  ((ch)->points.hit)
 /** Maximum hit points of ch. */
-#define GET_MAX_HIT(ch)	  ((ch)->points.max_hit)
+#define GET_MAX_HIT_FLOAT(ch)	  ((ch)->points.max_hit)
 /** Current move points (stamina) of ch. */
-#define GET_MOVE(ch)	  ((ch)->points.move)
+#define GET_MOVE_FLOAT(ch)	  ((ch)->points.move)
 /** Maximum move points (stamina) of ch. */
-#define GET_MAX_MOVE(ch)  ((ch)->points.max_move)
+#define GET_MAX_MOVE_FLOAT(ch)  ((ch)->points.max_move)
 /** Current mana points (magic) of ch. */
-#define GET_MANA(ch)	  ((ch)->points.mana)
+#define GET_MANA_FLOAT(ch)	  ((ch)->points.mana)
 /** Maximum mana points (magic) of ch. */
-#define GET_MAX_MANA(ch)  ((ch)->points.max_mana)
+#define GET_MAX_MANA_FLOAT(ch)  ((ch)->points.max_mana)
+/** Current hit points (health) of ch. */
+#define GET_HIT_INT(ch)	  ((int)(ch)->points.hit)
+/** Maximum hit points of ch. */
+#define GET_MAX_HIT_INT(ch)	  ((int)(ch)->points.max_hit)
+/** Current move points (stamina) of ch. */
+#define GET_MOVE_INT(ch)	  ((int)(ch)->points.move)
+/** Maximum move points (stamina) of ch. */
+#define GET_MAX_MOVE_INT(ch)  ((int)(ch)->points.max_move)
+/** Current mana points (magic) of ch. */
+#define GET_MANA_INT(ch)	  ((int)(ch)->points.mana)
+/** Maximum mana points (magic) of ch. */
+#define GET_MAX_MANA_INT(ch)  ((int)(ch)->points.max_mana)
+/** Current hit points (health) of ch. */
+#define SET_HIT(ch)	  ((ch)->points.hit)
+/** Maximum hit points of ch. */
+#define SET_MAX_HIT(ch)	  ((ch)->points.max_hit)
+/** Current move points (stamina) of ch. */
+#define SET_MOVE(ch)	  ((ch)->points.move)
+/** Maximum move points (stamina) of ch. */
+#define SET_MAX_MOVE(ch)  ((ch)->points.max_move)
+/** Current mana points (magic) of ch. */
+#define SET_MANA(ch)	  ((ch)->points.mana)
+/** Maximum mana points (magic) of ch. */
+#define SET_MAX_MANA(ch)  ((ch)->points.max_mana)
 /** Gold on ch. */
 #define GET_GOLD(ch)	  ((ch)->points.gold)
 /** Gold in bank of ch. */
@@ -533,9 +559,15 @@ do                                                              \
 /** Current damage roll modifier for ch. */
 #define GET_DAMROLL(ch)   ((ch)->points.damroll)
 
-#define GET_BASE_MANA_REGEN(ch)   ((ch)->points.base_mana_regen)
-#define GET_BASE_HIT_REGEN(ch)   ((ch)->points.base_hit_regen)
-#define GET_BASE_MOVE_REGEN(ch)   ((ch)->points.base_move_regen)
+#define GET_BASE_MANA_REGEN_FLOAT(ch)   ((ch)->points.base_mana_regen)
+#define GET_BASE_HIT_REGEN_FLOAT(ch)   ((ch)->points.base_hit_regen)
+#define GET_BASE_MOVE_REGEN_FLOAT(ch)   ((ch)->points.base_move_regen)
+#define GET_BASE_MANA_REGEN_INT(ch)   ((int)(ch)->points.base_mana_regen)
+#define GET_BASE_HIT_REGEN_INT(ch)   ((int)(ch)->points.base_hit_regen)
+#define GET_BASE_MOVE_REGEN_INT(ch)   ((int)(ch)->points.base_move_regen)
+#define SET_BASE_MANA_REGEN(ch)   ((ch)->points.base_mana_regen)
+#define SET_BASE_HIT_REGEN(ch)   ((ch)->points.base_hit_regen)
+#define SET_BASE_MOVE_REGEN(ch)   ((ch)->points.base_move_regen)
 
 /** Current position (standing, sitting) of ch. */
 #define GET_POS(ch)	  ((ch)->char_specials.position)

@@ -446,8 +446,8 @@ void hitprcnt_mtrigger(char_data *ch)
     return;
 
   for (t = TRIGGERS(SCRIPT(ch)); t; t = t->next) {
-    if (TRIGGER_CHECK(t, MTRIG_HITPRCNT) && GET_MAX_HIT(ch) &&
-        (((GET_HIT(ch) * 100) / GET_MAX_HIT(ch)) <= GET_TRIG_NARG(t))) {
+    if (TRIGGER_CHECK(t, MTRIG_HITPRCNT) && GET_MAX_HIT_INT(ch) &&
+        (((GET_HIT_INT(ch) * 100) / GET_MAX_HIT_INT(ch)) <= GET_TRIG_NARG(t))) {
 
       actor = FIGHTING(ch);
       ADD_UID_VAR(buf, t, char_script_id(actor), "actor", 0);

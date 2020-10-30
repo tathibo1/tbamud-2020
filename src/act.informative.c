@@ -237,8 +237,8 @@ static void diag_char_to_char(struct char_data *i, struct char_data *ch)
   int percent, ar_index;
   const char *pers = PERS(i, ch);
 
-  if (GET_MAX_HIT(i) > 0)
-    percent = (100 * GET_HIT(i)) / GET_MAX_HIT(i);
+  if (GET_MAX_HIT_INT(i) > 0)
+    percent = (100 * GET_HIT_INT(i)) / GET_MAX_HIT_INT(i);
   else
     percent = -1;		/* How could MAX_HIT be < 1?? */
 
@@ -793,9 +793,9 @@ ACMD(do_score)
   char mana[MAX_STRING_LENGTH];
   char move[MAX_STRING_LENGTH];
 
-  snprintf(hits, sizeof(hits), "%d/%d+%d", GET_HIT(ch), GET_MAX_HIT(ch), hit_gain(ch));
-  snprintf(mana, sizeof(mana), "%d/%d+%d", GET_MANA(ch), GET_MAX_MANA(ch), mana_gain(ch));
-  snprintf(move, sizeof(move), "%d/%d+%d", GET_MOVE(ch), GET_MAX_MOVE(ch), move_gain(ch));
+  snprintf(hits, sizeof(hits), "%d/%d+%d", GET_HIT_INT(ch), GET_MAX_HIT_INT(ch), (int)hit_gain(ch));
+  snprintf(mana, sizeof(mana), "%d/%d+%d", GET_MANA_INT(ch), GET_MAX_MANA_INT(ch), (int)mana_gain(ch));
+  snprintf(move, sizeof(move), "%d/%d+%d", GET_MOVE_INT(ch), GET_MAX_MOVE_INT(ch), (int)move_gain(ch));
 
   send_to_char(ch, "+==============================================================================+\r\n");
   send_to_char(ch, "| Name: %16s | Class: %18s | Level: %16d |\r\n", ch->player.name, pc_class_types[(int) GET_CLASS(ch)], GET_LEVEL(ch));
@@ -2143,9 +2143,9 @@ ACMD(do_toggle)
       if ((wimp_lev = atoi(arg2)) != 0) {
         if (wimp_lev < 0)
           send_to_char(ch, "Heh, heh, heh.. we are jolly funny today, eh?\r\n");
-        else if (wimp_lev > GET_MAX_HIT(ch))
+        else if (wimp_lev > GET_MAX_HIT_INT(ch))
           send_to_char(ch, "That doesn't make much sense, now does it?\r\n");
-        else if (wimp_lev > (GET_MAX_HIT(ch) / 2))
+        else if (wimp_lev > (GET_MAX_HIT_INT(ch) / 2))
           send_to_char(ch, "You can't set your wimp level above half your hit points.\r\n");
         else {
           send_to_char(ch, "Okay, you'll wimp out if you drop below %d hit points.", wimp_lev);
