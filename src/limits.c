@@ -383,6 +383,79 @@ static void check_idling(struct char_data *ch)
   }
 }
 
+/* Apply hit/mana/move regen every pulse (intended for every second) */
+void pulse_regen(int next_tick) {
+  struct char_data *i;
+  
+  for (i = character_list; i; i = i->next) {
+    //send_to_char(i, "next_tick %d\r\n", next_tick);
+    if (!IS_NPC(i)) {
+      // Hit regen
+      int hit_regen = hit_gain(i);
+      int hit_apply = 0;
+      if (hit_regen < SECS_PER_MUD_HOUR) {
+        /* If our regen is less that the number of seconds in a mud hour
+        we don't want to add mana every second. Instead, add 1 point every
+        second that's an even multiple of our regen */
+        if (!(next_tick % (SECS_PER_MUD_HOUR/hit_regen))) {
+          hit_apply = 1;
+        }
+      } else { // regen >= SECS_PER_MUD_HOUR
+        int remainder_apply = 0;
+        int remainder_regen = hit_regen % SECS_PER_MUD_HOUR;
+        if (remainder_regen && !(next_tick % (SECS_PER_MUD_HOUR/remainder_regen))) {
+          // For the portion of our regen that is not an even multiple of SECS_PER_MUD_HOUR
+          remainder_apply = 1;
+        }
+        hit_apply = (hit_regen / SECS_PER_MUD_HOUR) + remainder_apply;
+      }
+      GET_HIT(i) = MIN(MAX(GET_HIT(i) + hit_apply, 0), GET_MAX_HIT(i));
+
+      // Mana regen
+      int mana_regen = mana_gain(i);
+      int mana_apply = 0;
+      if (mana_regen < SECS_PER_MUD_HOUR) {
+        /* If our regen is less that the number of seconds in a mud hour
+        we don't want to add mana every second. Instead, add 1 point every
+        second that's an even multiple of our regen */
+        if (!(next_tick % (SECS_PER_MUD_HOUR/mana_regen))) {
+          mana_apply = 1;
+        }
+      } else { // regen >= SECS_PER_MUD_HOUR
+        int remainder_regen = mana_regen % SECS_PER_MUD_HOUR;
+        int remainder_apply = 0;
+        if (remainder_regen && !(next_tick % (SECS_PER_MUD_HOUR/remainder_regen))) {
+          // For the portion of our regen that is not an even multiple of SECS_PER_MUD_HOUR
+          remainder_apply = 1;
+        }
+        mana_apply = (mana_regen / SECS_PER_MUD_HOUR) + remainder_apply;
+      }
+      GET_MANA(i) = MIN(MAX(GET_MANA(i) + mana_apply, 0), GET_MAX_MANA(i));
+
+      // Move regen
+      int move_regen = move_gain(i);
+      int move_apply = 0;
+      if (move_regen < SECS_PER_MUD_HOUR) {
+        /* If our regen is less that the number of seconds in a mud hour
+        we don't want to add mana every second. Instead, add 1 point every
+        second that's an even multiple of our regen */
+        if (!(next_tick % (SECS_PER_MUD_HOUR/move_regen))) {
+          move_apply = 1;
+        }
+      } else { // hit_regen >= SECS_PER_MUD_HOUR
+        int remainder_regen = move_regen % SECS_PER_MUD_HOUR;
+        int remainder_apply = 0;
+        if (remainder_regen && !(next_tick % (SECS_PER_MUD_HOUR/remainder_regen))) {
+          // For the portion of our regen that is not an even multiple of SECS_PER_MUD_HOUR
+          remainder_apply = 1;
+        }
+        move_apply = (move_regen / SECS_PER_MUD_HOUR) + remainder_apply;
+      }
+      GET_MOVE(i) = MIN(MAX(GET_MOVE(i) + move_apply, 0), GET_MAX_MOVE(i));
+    }
+  }
+}
+
 /* Update PCs, NPCs, and objects */
 void point_update(void)
 {
@@ -398,9 +471,11 @@ void point_update(void)
     gain_condition(i, THIRST, -1);
 
     if (GET_POS(i) >= POS_STUNNED) {
-      GET_HIT(i) = MIN(GET_HIT(i) + hit_gain(i), GET_MAX_HIT(i));
-      GET_MANA(i) = MIN(GET_MANA(i) + mana_gain(i), GET_MAX_MANA(i));
-      GET_MOVE(i) = MIN(GET_MOVE(i) + move_gain(i), GET_MAX_MOVE(i));
+      if (IS_NPC(i)) {
+        GET_HIT(i) = MIN(GET_HIT(i) + hit_gain(i), GET_MAX_HIT(i));
+        GET_MANA(i) = MIN(GET_MANA(i) + mana_gain(i), GET_MAX_MANA(i));
+        GET_MOVE(i) = MIN(GET_MOVE(i) + move_gain(i), GET_MAX_MOVE(i));
+      }
       if (AFF_FLAGGED(i, AFF_POISON))
 	if (damage(i, i, 2, SPELL_POISON) == -1)
 	  continue;	/* Oops, they died. -gg 6/24/98 */

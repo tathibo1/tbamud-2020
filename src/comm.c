@@ -990,6 +990,7 @@ void heartbeat(int heart_pulse)
 
   if (!(heart_pulse % PASSES_PER_SEC)) {    /* EVERY second */
     msdp_update();
+    pulse_regen(next_tick);
     next_tick--;
   }
 
