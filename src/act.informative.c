@@ -31,7 +31,7 @@
 
 /* prototypes of local functions */
 /* do_diagnose utility functions */
-static void diag_char_to_char(struct char_data *i, struct char_data *ch);
+extern void diag_char_to_char(struct char_data *i, struct char_data *ch);
 /* do_look and do_examine utility functions */
 static void do_auto_exits(struct char_data *ch);
 static void list_char_to_char(struct char_data *list, struct char_data *ch);
@@ -219,7 +219,7 @@ static void list_obj_to_char(struct obj_data *list, struct char_data *ch, int mo
     send_to_char(ch, "  Nothing.\r\n");
 }
 
-static void diag_char_to_char(struct char_data *i, struct char_data *ch)
+extern void diag_char_to_char(struct char_data *i, struct char_data *ch)
 {
   struct {
     byte percent;
