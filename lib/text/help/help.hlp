@@ -4234,6 +4234,20 @@ most MUDs.
 
 See also: OEDIT-KEYWORD, MEDIT-KEYWORDS, EXTRA, COLORCODES
 #31
+KEYWORDS
+
+This help file is unfinished.
+REJUVINATE
+
+Usage       : cast 'rejuvinate' <victim>
+Accumulative: No
+Duration    : Instantaneous
+Level       : Cleric level 16
+
+Rejuvinate will replenish 60 + 3d8 Movement points.
+
+See also: RESTORE
+#0
 KICK
 
 Some fighting classes only.
@@ -7823,6 +7837,17 @@ The following terrains may be selected (only one):
 10)  Underwater       Underwater requires AFF_SCUBA.          5 
 
 #31
+REJUVINATE
+
+Usage       : cast 'rejuvinate' <victim>
+Accumulative: No
+Duration    : Instantaneous
+Level       : Cleric level 16
+
+Rejuvinate will replenish 50 + 3d8 Movement points.
+
+
+#0
 RELEASES
 
 The complete release history of tbaMUD is available at:
@@ -9030,6 +9055,7 @@ SPELLS MAGICS SPELLBOOKS TOMBS SPELL-LEVELS SPELLS-STOCK SPELLLIST
 
 | Mage               level |   Cleric              level |
 ----------------------------------------------------------
+| Identify             1   |   Identify              1   |
 | Magic Missile        1   |   Cure Light            1   |
 | Detect Invisibility  2   |   Armor                 1   |
 | Detect Magic         2   |   Create Food           2   |
@@ -9047,7 +9073,7 @@ SPELLS MAGICS SPELLBOOKS TOMBS SPELL-LEVELS SPELLS-STOCK SPELLLIST
 | Detect Poison       10   |   Cure Crit             9   |
 | Color Spray         11   |   Summon               10   |
 | Energy Drain        13   |   Remove Poison        10   |
-| Curse               14   |   Identify             11   |
+| Curse               14   |   Rejuvinate           11   |
 | Poison              14   |   Word of Recall       12   |
 | Fireball            15   |   Earthquake           12   |
 | Charm               16   |   Darkness             13   |

@@ -1604,6 +1604,7 @@ void init_spell_levels(void)
   spell_level(SPELL_CURE_CRITIC, CLASS_CLERIC, 9);
   spell_level(SPELL_SUMMON, CLASS_CLERIC, 10);
   spell_level(SPELL_REMOVE_POISON, CLASS_CLERIC, 10);
+  spell_level(SPELL_REJUVINATE, CLASS_CLERIC, 11);
   spell_level(SPELL_WORD_OF_RECALL, CLASS_CLERIC, 12);
   spell_level(SPELL_DARKNESS, CLASS_CLERIC, 12);
   spell_level(SPELL_EARTHQUAKE, CLASS_CLERIC, 12);

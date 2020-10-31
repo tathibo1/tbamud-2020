@@ -819,6 +819,10 @@ void mag_points(int level, struct char_data *ch, struct char_data *victim,
     healing = 100 + dice(3, 8);
     send_to_char(victim, "A warm feeling floods your body.\r\n");
     break;
+  case SPELL_REJUVINATE:
+    move = 50 + dice(3, 8);
+    send_to_char(victim, "You feel rejuvinated.\r\n");
+    break;
   }
   SET_HIT(victim) = MIN(GET_MAX_HIT_INT(victim), GET_HIT_INT(victim) + healing);
   SET_MOVE(victim) = MIN(GET_MAX_MOVE_INT(victim), GET_MOVE_INT(victim) + move);
