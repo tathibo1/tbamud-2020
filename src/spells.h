@@ -94,9 +94,8 @@
 #define SPELL_FLY                    53 /* Reserved Skill[] DO NOT CHANGE */
 #define SPELL_DARKNESS               54
 #define SPELL_REJUVINATE             55
-#define SPELL_RESTORE                56
 /** Total Number of defined spells */
-#define NUM_SPELLS                   56
+#define NUM_SPELLS                   55
 
 /* Insert new spells here, up to MAX_SPELLS */
 #define MAX_SPELLS		    130
@@ -113,6 +112,7 @@
 #define SKILL_STEAL                 139 /* Reserved Skill[] DO NOT CHANGE */
 #define SKILL_TRACK                 140 /* Reserved Skill[] DO NOT CHANGE */
 #define SKILL_BANDAGE               141 /* Reserved Skill[] DO NOT CHANGE */
+#define SKILL_DOUBLE                142 /* added */
 
 /* New skills may be added here up to MAX_SKILLS (200) */
 

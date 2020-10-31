@@ -515,9 +515,6 @@ static void dam_message(int dam, struct char_data *ch, struct char_data *victim,
   );
   act(buf, FALSE, ch, NULL, victim, TO_VICT | TO_SLEEP);
   send_to_char(victim, CCNRM(victim, C_CMP));
-
-  // Auto diagnose after each round of combat
-  diag_char_to_char(victim, ch);
 }
 
 /*  message for doing damage with a spell or skill. Also used for weapon
@@ -579,7 +576,6 @@ int skill_message(int dam, struct char_data *ch, struct char_data *vict,
           send_to_char(ch, CCYEL(ch, C_CMP));
           act(msg->miss_msg.attacker_msg, FALSE, ch, weap, vict, TO_CHAR);
           send_to_char(ch, CCNRM(ch, C_CMP));
-          diag_char_to_char(vict, ch);
         }
 
         send_to_char(vict, CCRED(vict, C_CMP));
@@ -919,6 +915,7 @@ void hit(struct char_data *ch, struct char_data *victim, int type)
 void perform_violence(void)
 {
   struct char_data *ch, *tch;
+  int prob_double = 0;
 
   for (ch = combat_list; ch; ch = next_combat_list) {
     next_combat_list = ch->next_fighting;
@@ -968,6 +965,21 @@ void perform_violence(void)
     }
 
     hit(ch, FIGHTING(ch), TYPE_UNDEFINED);
+
+    /* Double */
+    if (IS_NPC(ch)) {
+      prob_double = MOB_FLAGGED(ch, MOB_DOUBLE)*80;
+    } else {
+      prob_double = GET_SKILL(ch, SKILL_DOUBLE) + GET_LEVEL(ch) / 2;
+    }
+    if (prob_double > rand_number(1, 100)) {
+      hit(ch, FIGHTING(ch), TYPE_UNDEFINED);
+    }
+
+    if (!MOB_FLAGGED(FIGHTING(ch), MOB_NOTDEADYET)) {
+      diag_char_to_char(FIGHTING(ch), ch);
+    }
+
     if (MOB_FLAGGED(ch, MOB_SPEC) && GET_MOB_SPEC(ch) && !MOB_FLAGGED(ch, MOB_NOTDEADYET)) {
       char actbuf[MAX_INPUT_LENGTH] = "";
       (GET_MOB_SPEC(ch)) (ch, ch, 0, actbuf);

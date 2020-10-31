@@ -228,6 +228,7 @@ const char *action_bits[] = {
   "NO_BASH",
   "NO_BLIND",
   "NO_KILL",
+  "DOUBLE",
   "DEAD",    /* You should never see this. */
   "\n"
 };
