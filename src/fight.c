@@ -489,25 +489,35 @@ static void dam_message(int dam, struct char_data *ch, struct char_data *victim,
   else			msgnum = 8;
 
   /* damage message to onlookers */
-  buf = replace_string(dam_weapons[msgnum].to_room,
-	  attack_hit_text[w_type].singular, attack_hit_text[w_type].plural);
+  buf = replace_string(
+    dam_weapons[msgnum].to_room,
+	  attack_hit_text[w_type].singular,
+    attack_hit_text[w_type].plural
+  );
   act(buf, FALSE, ch, NULL, victim, TO_NOTVICT);
 
   /* damage message to damager */
-  if (GET_LEVEL(ch) >= LVL_IMMORT)
-	send_to_char(ch, "(%d) ", dam);
-  buf = replace_string(dam_weapons[msgnum].to_char,
-	  attack_hit_text[w_type].singular, attack_hit_text[w_type].plural);
+	send_to_char(ch, "\tY(%d) ", dam);
+  buf = replace_string(
+    dam_weapons[msgnum].to_char,
+	  attack_hit_text[w_type].singular,
+    attack_hit_text[w_type].plural
+  );
   act(buf, FALSE, ch, NULL, victim, TO_CHAR);
   send_to_char(ch, CCNRM(ch, C_CMP));
 
   /* damage message to damagee */
-  if (GET_LEVEL(victim) >= LVL_IMMORT)
-    send_to_char(victim, "\tR(%d)", dam);
-  buf = replace_string(dam_weapons[msgnum].to_victim,
-	  attack_hit_text[w_type].singular, attack_hit_text[w_type].plural);
+  send_to_char(victim, "\tR(%d) ", dam);
+  buf = replace_string(
+    dam_weapons[msgnum].to_victim,
+	  attack_hit_text[w_type].singular,
+    attack_hit_text[w_type].plural
+  );
   act(buf, FALSE, ch, NULL, victim, TO_VICT | TO_SLEEP);
   send_to_char(victim, CCNRM(victim, C_CMP));
+
+  // Auto diagnose after each round of combat
+  diag_char_to_char(victim, ch);
 }
 
 /*  message for doing damage with a spell or skill. Also used for weapon
@@ -552,11 +562,13 @@ int skill_message(int dam, struct char_data *ch, struct char_data *vict,
         } else {
           if (msg->hit_msg.attacker_msg) {
             send_to_char(ch, CCYEL(ch, C_CMP));
+            send_to_char(ch, "\tY(%d) ", dam);
             act(msg->hit_msg.attacker_msg, FALSE, ch, weap, vict, TO_CHAR);
             send_to_char(ch, CCNRM(ch, C_CMP));
           }
 
           send_to_char(vict, CCRED(vict, C_CMP));
+          send_to_char(vict, "\tR(%d) ", dam);
           act(msg->hit_msg.victim_msg, FALSE, ch, weap, vict, TO_VICT | TO_SLEEP);
           send_to_char(vict, CCNRM(vict, C_CMP));
 
@@ -567,6 +579,7 @@ int skill_message(int dam, struct char_data *ch, struct char_data *vict,
           send_to_char(ch, CCYEL(ch, C_CMP));
           act(msg->miss_msg.attacker_msg, FALSE, ch, weap, vict, TO_CHAR);
           send_to_char(ch, CCNRM(ch, C_CMP));
+          diag_char_to_char(vict, ch);
         }
 
         send_to_char(vict, CCRED(vict, C_CMP));
