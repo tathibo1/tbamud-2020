@@ -792,22 +792,23 @@ ACMD(do_score)
   char hits[MAX_STRING_LENGTH];
   char mana[MAX_STRING_LENGTH];
   char move[MAX_STRING_LENGTH];
+  char saves[MAX_STRING_LENGTH];
 
   snprintf(hits, sizeof(hits), "%d/%d+%d", GET_HIT_INT(ch), GET_MAX_HIT_INT(ch), (int)hit_gain(ch));
   snprintf(mana, sizeof(mana), "%d/%d+%d", GET_MANA_INT(ch), GET_MAX_MANA_INT(ch), (int)mana_gain(ch));
   snprintf(move, sizeof(move), "%d/%d+%d", GET_MOVE_INT(ch), GET_MAX_MOVE_INT(ch), (int)move_gain(ch));
+  snprintf(saves, sizeof(saves), "%d/%d/%d/%d/%d", GET_SAVE(ch, 0), GET_SAVE(ch, 1), GET_SAVE(ch, 2), GET_SAVE(ch, 3), GET_SAVE(ch, 4));
 
   send_to_char(ch, "+==============================================================================+\r\n");
   send_to_char(ch, "| Name: %16s | Class: %18s | Level: %16d |\r\n", ch->player.name, pc_class_types[(int) GET_CLASS(ch)], GET_LEVEL(ch));
   send_to_char(ch, "+------------------------+---------------------------+-------------------------+\r\n");
-  send_to_char(ch, "| Str: %13d/%3d | AC: %21d | Hits: %17s |\r\n", GET_STR(ch), GET_ADD(ch), GET_AC(ch), hits);
-  send_to_char(ch, "| Int: %17d | HitRoll: %16d | Mana: %17s |\r\n", GET_INT(ch), GET_HITROLL(ch), mana);
-  send_to_char(ch, "| Wis: %17d | DamRoll: %16d | Move: %17s |\r\n", GET_WIS(ch), GET_DAMROLL(ch), move);
-  send_to_char(ch, "| Dex: %17d | Gold: %19d | Hunger: %15d |\r\n", GET_DEX(ch), GET_GOLD(ch), GET_COND(ch, HUNGER));
-  send_to_char(ch, "| Con: %17d | Bank: %19d | Thirst: %15d |\r\n", GET_CON(ch), GET_BANK_GOLD(ch), GET_COND(ch, THIRST));
-  send_to_char(ch, "| Cha: %17d | QP: %21d | Drunk: %16d |\r\n", GET_CHA(ch), GET_QUESTPOINTS(ch), GET_COND(ch, DRUNK));
-  send_to_char(ch, "+------------------------------------------------------------------------------+\r\n");
-  send_to_char(ch, "| Age:%-4d SAV_PARA:%-3d SAV_ROD:%-3d SAV_PETRI:%-3d SAV_BREATH:%-3d SAV_SPELL:%-3d |\r\n", GET_AGE(ch), GET_SAVE(ch, 0), GET_SAVE(ch, 1), GET_SAVE(ch, 2), GET_SAVE(ch, 3), GET_SAVE(ch, 4));
+  send_to_char(ch, "| Str: %13d/%3d | Align: %18d | Hits: %17s |\r\n", GET_STR(ch), GET_ADD(ch), GET_ALIGNMENT(ch), hits);
+  send_to_char(ch, "| Int: %17d | AC: %21d | Mana: %17s |\r\n", GET_INT(ch), GET_AC(ch), mana);
+  send_to_char(ch, "| Wis: %17d | HitRoll: %16d | Move: %17s |\r\n", GET_WIS(ch), GET_HITROLL(ch), move);
+  send_to_char(ch, "| Dex: %17d | DamRoll: %16d | Hunger: %15d |\r\n", GET_DEX(ch), GET_DAMROLL(ch), GET_COND(ch, HUNGER));
+  send_to_char(ch, "| Con: %17d | Gold: %19d | Thirst: %15d |\r\n", GET_CON(ch), GET_GOLD(ch), GET_COND(ch, THIRST));
+  send_to_char(ch, "| Cha: %17d | Bank: %19d | Drunk: %16d |\r\n", GET_CHA(ch), GET_BANK_GOLD(ch), GET_COND(ch, DRUNK));
+  send_to_char(ch, "| Age: %17d | QP: %21d | Saves: %16s |\r\n", GET_AGE(ch), GET_QUESTPOINTS(ch), saves);
   send_to_char(ch, "+==============================================================================+\r\n");
 
   if (GET_LEVEL(ch) < LVL_IMMORT)
