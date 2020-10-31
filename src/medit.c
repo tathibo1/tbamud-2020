@@ -381,8 +381,10 @@ static void medit_disp_mob_flags(struct descriptor_data *d)
   /* Mob flags has special handling to remove illegal flags from the list */
   for (i = 0; i < NUM_MOB_FLAGS; i++) {
     if (medit_illegal_mob_flag(i)) continue;
-    write_to_output(d, "%s%2d%s) %-20.20s  %s", grn, ++count, nrm, action_bits[i],
-                !(++columns % 2) ? "\r\n" : "");
+    write_to_output(
+      d, "%s%2d%s) %-20.20s  %s",
+      grn, ++count, nrm, action_bits[i], !(++columns % 2) ? "\r\n" : ""
+    );
   }
 
   sprintbitarray(MOB_FLAGS(OLC_MOB(d)), action_bits, AF_ARRAY_MAX, flags);
