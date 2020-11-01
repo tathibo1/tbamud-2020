@@ -976,7 +976,7 @@ void perform_violence(void)
       hit(ch, FIGHTING(ch), TYPE_UNDEFINED);
     }
 
-    if (!MOB_FLAGGED(FIGHTING(ch), MOB_NOTDEADYET)) {
+    if (FIGHTING(ch) && !MOB_FLAGGED(FIGHTING(ch), MOB_NOTDEADYET)) {
       diag_char_to_char(FIGHTING(ch), ch);
     }
 
