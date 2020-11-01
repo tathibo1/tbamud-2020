@@ -970,7 +970,11 @@ void perform_violence(void)
     if (IS_NPC(ch)) {
       prob_double = MOB_FLAGGED(ch, MOB_DOUBLE)*80;
     } else {
-      prob_double = GET_SKILL(ch, SKILL_DOUBLE) + GET_LEVEL(ch) / 2;
+      if (GET_SKILL(ch, SKILL_DOUBLE)) {
+        // If we called the next line without the above conditional, we'd have
+        // a small chance of landing double without having the skill.
+        prob_double = GET_SKILL(ch, SKILL_DOUBLE) + GET_LEVEL(ch) / 2;
+      }
     }
     if (prob_double > rand_number(1, 100)) {
       hit(ch, FIGHTING(ch), TYPE_UNDEFINED);
